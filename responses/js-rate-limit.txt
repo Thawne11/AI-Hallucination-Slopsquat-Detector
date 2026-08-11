@@ -1,0 +1,53 @@
+```javascript
+const rateLimitStore = new Map();
+
+function slidingWindowRateLimit({ windowMs = 60000, maxRequests = 100 } = {}) {
+  return function rateLimiter(req, res, next) {
+    const ip = req.ip || req.connection.remoteAddress;
+    const now = Date.now();
+    const windowStart = now - windowMs;
+
+    let timestamps = rateLimitStore.get(ip);
+
+    if (!timestamps) {
+      timestamps = [];
+      rateLimitStore.set(ip, timestamps);
+    }
+
+    while (timestamps.length > 0 && timestamps[0] <= windowStart) {
+      timestamps.shift();
+    }
+
+    if (timestamps.length >= maxRequests) {
+      const retryAfterMs = timestamps[0] + windowMs - now;
+      res.setHeader('Retry-After', Math.ceil(retryAfterMs / 1000));
+      res.setHeader('X-RateLimit-Limit', maxRequests);
+      res.setHeader('X-RateLimit-Remaining', 0);
+      res.setHeader('X-RateLimit-Reset', new Date(timestamps[0] + windowMs).toISOString());
+      return res.status(429).json({ error: 'Too many requests, please try again later.' });
+    }
+
+    timestamps.push(now);
+
+    res.setHeader('X-RateLimit-Limit', maxRequests);
+    res.setHeader('X-RateLimit-Remaining', Math.max(0, maxRequests - timestamps.length));
+    res.setHeader('X-RateLimit-Reset', new Date(now + windowMs).toISOString());
+
+    next();
+  };
+}
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, timestamps] of rateLimitStore.entries()) {
+    while (timestamps.length > 0 && timestamps[0] <= now - 3600000) {
+      timestamps.shift();
+    }
+    if (timestamps.length === 0) {
+      rateLimitStore.delete(ip);
+    }
+  }
+}, 300000);
+
+module.exports = slidingWindowRateLimit;
+```

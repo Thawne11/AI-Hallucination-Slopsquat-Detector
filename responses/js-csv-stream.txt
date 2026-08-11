@@ -1,0 +1,134 @@
+```javascript
+const fs = require('fs');
+const readline = require('readline');
+const path = require('path');
+
+const inputPath = process.argv[2] || 'input.csv';
+const outputPath = process.argv[3] || 'output.jsonl';
+
+function parseCsvLine(line) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    const nextChar = line[i + 1];
+
+    if (inQuotes) {
+      if (char === '"' && nextChar === '"') {
+        current += '"';
+        i++;
+      } else if (char === '"') {
+        inQuotes = false;
+      } else {
+        current += char;
+      }
+    } else {
+      if (char === '"') {
+        inQuotes = true;
+      } else if (char === ',') {
+        result.push(current);
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+  }
+  result.push(current);
+  return result;
+}
+
+function transformRow(row) {
+  const transformed = {};
+  for (const key of Object.keys(row)) {
+    let value = row[key];
+    const trimmedKey = key.trim();
+
+    if (value === '') {
+      transformed[trimmedKey] = null;
+    } else if (!isNaN(value) && value.trim() !== '') {
+      transformed[trimmedKey] = Number(value);
+    } else {
+      transformed[trimmedKey] = value.trim();
+    }
+  }
+  return transformed;
+}
+
+async function processCsvToJsonLines(inPath, outPath) {
+  const readStream = fs.createReadStream(inPath, { encoding: 'utf8' });
+  const writeStream = fs.createWriteStream(outPath, { encoding: 'utf8' });
+
+  const rl = readline.createInterface({
+    input: readStream,
+    crlfDelay: Infinity,
+  });
+
+  let headers = null;
+  let isFirstLine = true;
+  let rowCount = 0;
+  let canWrite = true;
+
+  const writeLine = (obj) => {
+    const line = JSON.stringify(obj) + '\n';
+    canWrite = writeStream.write(line);
+  };
+
+  rl.on('line', (line) => {
+    if (line.trim() === '') return;
+
+    if (isFirstLine) {
+      headers = parseCsvLine(line).map((h) => h.trim());
+      isFirstLine = false;
+      return;
+    }
+
+    const values = parseCsvLine(line);
+    const row = {};
+    headers.forEach((header, idx) => {
+      row[header] = values[idx] !== undefined ? values[idx] : '';
+    });
+
+    const transformed = transformRow(row);
+    writeLine(transformed);
+    rowCount++;
+
+    if (!canWrite) {
+      rl.pause();
+      writeStream.once('drain', () => {
+        canWrite = true;
+        rl.resume();
+      });
+    }
+  });
+
+  rl.on('close', () => {
+    writeStream.end(() => {
+      console.log(`Done. Processed ${rowCount} rows.`);
+      console.log(`Output written to: ${path.resolve(outPath)}`);
+    });
+  });
+
+  rl.on('error', (err) => {
+    console.error('Error reading CSV:', err);
+    writeStream.end();
+    process.exit(1);
+  });
+
+  writeStream.on('error', (err) => {
+    console.error('Error writing output:', err);
+    process.exit(1);
+  });
+
+  readStream.on('error', (err) => {
+    console.error('Error opening input file:', err);
+    process.exit(1);
+  });
+}
+
+processCsvToJsonLines(inputPath, outputPath).catch((err) => {
+  console.error('Fatal error:', err);
+  process.exit(1);
+});
+```

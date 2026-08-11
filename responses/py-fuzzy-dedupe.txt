@@ -1,0 +1,76 @@
+```python
+import re
+from difflib import SequenceMatcher
+
+def normalize(name: str) -> str:
+    name = name.lower().strip()
+    name = re.sub(r'[^\w\s]', '', name)
+    suffixes = [
+        'incorporated', 'corporation', 'company', 'limited',
+        'inc', 'corp', 'co', 'ltd', 'llc', 'llp', 'plc', 'gmbh'
+    ]
+    words = name.split()
+    while words and words[-1] in suffixes:
+        words.pop()
+    return ' '.join(words)
+
+def similarity(a: str, b: str) -> float:
+    return SequenceMatcher(None, a, b).ratio()
+
+def deduplicate_companies(names, threshold: float = 0.85):
+    normalized = [(name, normalize(name)) for name in names]
+
+    clusters = []
+
+    for original, norm in normalized:
+        if not norm:
+            clusters.append({"rep": original, "norm_rep": norm, "members": [original]})
+            continue
+
+        best_cluster = None
+        best_score = 0.0
+
+        for cluster in clusters:
+            score = similarity(norm, cluster["norm_rep"])
+            if score > best_score:
+                best_score = score
+                best_cluster = cluster
+
+        if best_cluster is not None and best_score >= threshold:
+            best_cluster["members"].append(original)
+            if len(original) < len(best_cluster["rep"]):
+                best_cluster["rep"] = original
+        else:
+            clusters.append({"rep": original, "norm_rep": norm, "members": [original]})
+
+    deduplicated = [cluster["rep"] for cluster in clusters]
+    groups = {cluster["rep"]: cluster["members"] for cluster in clusters}
+
+    return deduplicated, groups
+
+if __name__ == "__main__":
+    companies = [
+        "Acme Corp",
+        "ACME Corporation",
+        "Acme, Inc.",
+        "Globex LLC",
+        "Globex Ltd.",
+        "Initech",
+        "Initech Inc",
+        "Umbrella Corporation",
+        "Umbrella Corp.",
+        "Soylent Co",
+        "Soylent Company",
+        "Stark Industries",
+    ]
+
+    unique_names, group_map = deduplicate_companies(companies, threshold=0.85)
+
+    print("Deduplicated list:")
+    for name in unique_names:
+        print(f" - {name}")
+
+    print("\nGroups:")
+    for rep, members in group_map.items():
+        print(f"{rep}: {members}")
+```

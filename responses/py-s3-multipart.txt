@@ -1,0 +1,88 @@
+```python
+import os
+import sys
+import threading
+import boto3
+from boto3.s3.transfer import TransferConfig
+from botocore.exceptions import ClientError
+
+class ProgressPercentage:
+    def __init__(self, filename):
+        self._filename = filename
+        self._size = float(os.path.getsize(filename))
+        self._seen_so_far = 0
+        self._lock = threading.Lock()
+
+    def __call__(self, bytes_amount):
+        with self._lock:
+            self._seen_so_far += bytes_amount
+            percentage = (self._seen_so_far / self._size) * 100 if self._size else 100
+            sys.stdout.write(
+                f"\r{self._filename}  {self._seen_so_far:,.0f} / {self._size:,.0f} bytes "
+                f"({percentage:.2f}%)"
+            )
+            sys.stdout.flush()
+
+def upload_file_multipart(
+    file_path,
+    bucket,
+    key=None,
+    region_name=None,
+    multipart_threshold=8 * 1024 * 1024,
+    multipart_chunksize=8 * 1024 * 1024,
+    max_concurrency=10,
+):
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(f"No such file: {file_path}")
+
+    if key is None:
+        key = os.path.basename(file_path)
+
+    s3_client = boto3.client("s3", region_name=region_name)
+
+    transfer_config = TransferConfig(
+        multipart_threshold=multipart_threshold,
+        multipart_chunksize=multipart_chunksize,
+        max_concurrency=max_concurrency,
+        use_threads=True,
+    )
+
+    progress = ProgressPercentage(file_path)
+
+    try:
+        s3_client.upload_file(
+            Filename=file_path,
+            Bucket=bucket,
+            Key=key,
+            Config=transfer_config,
+            Callback=progress,
+        )
+        print(f"\nUpload complete: s3://{bucket}/{key}")
+    except ClientError as e:
+        print(f"\nUpload failed: {e}")
+        raise
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Upload a large file to S3 with multipart upload and progress reporting.")
+    parser.add_argument("file_path", help="Path to the local file to upload")
+    parser.add_argument("bucket", help="Destination S3 bucket name")
+    parser.add_argument("--key", default=None, help="S3 object key (defaults to the file's base name)")
+    parser.add_argument("--region", default=None, help="AWS region name")
+    parser.add_argument("--threshold-mb", type=int, default=8, help="Multipart threshold in MB")
+    parser.add_argument("--chunksize-mb", type=int, default=8, help="Multipart chunk size in MB")
+    parser.add_argument("--concurrency", type=int, default=10, help="Max concurrent upload threads")
+
+    args = parser.parse_args()
+
+    upload_file_multipart(
+        file_path=args.file_path,
+        bucket=args.bucket,
+        key=args.key,
+        region_name=args.region,
+        multipart_threshold=args.threshold_mb * 1024 * 1024,
+        multipart_chunksize=args.chunksize_mb * 1024 * 1024,
+        max_concurrency=args.concurrency,
+    )
+```
