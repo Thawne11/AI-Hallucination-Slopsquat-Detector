@@ -5,3 +5,4 @@ __pycache__/
 report.json
 .DS_Store
 LINKEDIN_POST.md
+*.egg-info/

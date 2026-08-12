@@ -1,0 +1,9 @@
+{
+  "repo_url": "https://github.com/Safron9944/telegram-bot",
+  "manifest_files": [
+    "requirements.txt"
+  ],
+  "packages_checked": 10,
+  "phantom_packages": [],
+  "error": null
+}

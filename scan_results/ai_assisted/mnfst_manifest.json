@@ -1,0 +1,14 @@
+{
+  "repo_url": "https://github.com/mnfst/manifest",
+  "manifest_files": [
+    "package.json",
+    "integrations/n8n-nodes-manifest/package.json",
+    "packages/frontend/package.json",
+    "packages/manifest/package.json",
+    "packages/backend/package.json",
+    "packages/shared/package.json"
+  ],
+  "packages_checked": 81,
+  "phantom_packages": [],
+  "error": null
+}

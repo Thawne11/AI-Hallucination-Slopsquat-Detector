@@ -1,0 +1,10 @@
+{
+  "repo_url": "https://github.com/axios/axios",
+  "manifest_files": [
+    "package.json",
+    "docs/package.json"
+  ],
+  "packages_checked": 48,
+  "phantom_packages": [],
+  "error": null
+}

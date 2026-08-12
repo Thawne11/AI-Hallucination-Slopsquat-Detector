@@ -15,7 +15,107 @@ AI-generated code (or let an AI coding agent run `pip install` /
 This turns a pure reliability problem (the model made something up) into a
 supply-chain attack surface.
 
-## What this tool does
+This repo has two tools:
+
+1. **`slopsquat-scan`** — an installable CLI that clones a real repo and
+   checks its *declared* dependencies (`requirements.txt`, `package.json`,
+   etc.) against the real registries. Answers: does an existing codebase
+   already have a phantom dependency in it?
+2. **The generation tester** (`run.py` / `analyze.py` / `rerun_analyze.py`)
+   — asks an LLM to write code and checks what it imports. Answers: how
+   often does a model invent one in the first place?
+
+**Neither tool registers, publishes, or claims any of the flagged package
+names.** They only detect and report — actually squatting a flagged name,
+even "to prove the point," would itself be the attack this project is about.
+
+## `slopsquat-scan`: the repo-scanning CLI
+
+```bash
+pip install -e .
+slopsquat-scan scan https://github.com/psf/requests
+slopsquat-scan batch repos_baseline.txt --out-dir scan_results/baseline
+```
+
+- `scan <repo-url>` — clone one repo (shallow, `--depth 1`), find its
+  manifest files, check every declared dependency, print a JSON report.
+- `batch <repos-file> [--out-dir DIR]` — same, for a list of repos, one JSON
+  report per repo.
+
+**Scope decision: manifest files, not full source scan.** Slopsquatting's
+real attack surface is the *declared* dependency — what `pip install -r
+requirements.txt` or `npm install` actually pulls down — not every import
+statement buried in source. So the scanner parses:
+- Python: `requirements.txt`, `pyproject.toml` (PEP 621 `[project]` and
+  Poetry `[tool.poetry]`), `setup.py` (`install_requires=[...]`)
+- JS/Node: `package.json` (`dependencies` + `devDependencies`)
+
+See `scanner/manifest_parser.py` and `scanner/repo_scan.py`.
+
+### Two false-positive sources found and fixed while building this
+
+Both of these showed up as real findings during development, on real repos,
+and both turned out to be measurement bugs, not actual phantom dependencies.
+Worth documenting because they're exactly the kind of thing that makes a
+naive "check if the name exists" tool noisy in practice:
+
+1. **Test fixtures.** `python-poetry/poetry`'s own test suite contains
+   `pyproject.toml` fixtures with deliberately-fake dependency names (to
+   test poetry's own error handling) — e.g. `tests/fixtures/invalid_pyproject/`.
+   The scanner initially walked every file named `pyproject.toml` in the
+   repo, fixtures included, and flagged 10 "phantom" packages that were
+   never real dependencies of the project at all. Fixed by excluding
+   `tests/`, `fixtures/`, `examples/`, and similar directories from the
+   walk.
+2. **Monorepo self-references.** In JS/Python monorepos, a package
+   legitimately depends on a sibling package by name (`"@myorg/core": "*"`,
+   or a Poetry `{path = "../sibling"}` dependency). That name won't resolve
+   on the public registry because it was never meant to — it's resolved
+   locally by the workspace tooling. Initially this looked like more
+   phantom packages (`@dukkanify/core`, `manifest-shared`,
+   `openbrain-memory`, ...). Fixed by collecting every package name the
+   repo declares for *itself* across all its manifest files first, then
+   excluding dependencies that match a locally-declared name.
+
+Both fixes are in `scanner/manifest_parser.py` / `scanner/repo_scan.py`.
+Tracked as [issue #2](https://github.com/Thawne11/AI-Hallucination-Slopsquat-Detector/issues/2)-adjacent
+measurement caveats, since they're the same underlying lesson: an
+existence-check is a blunt instrument, and needs real-world validation
+before the numbers mean anything.
+
+### Prevalence study: baseline vs. AI-assisted repos
+
+Scanning only flagship, heavily-reviewed repos (React, Django, requests...)
+would likely show 0% regardless of whether the risk is real — that's not a
+meaningful test by itself. So this ran two groups:
+
+- **Baseline (`repos_baseline.txt`, 8 repos)** — hand-picked, well-known,
+  actively maintained Python/JS repos (`psf/requests`, `pallets/flask`,
+  `tiangolo/fastapi`, `python-poetry/poetry`, `expressjs/express`,
+  `axios/axios`, `lodash/lodash`, `chalk/chalk`). Control group.
+- **AI-assisted (`repos_ai_assisted.txt`, 10 repos)** — discovered via
+  `gh search commits` for real commit messages containing AI co-authorship
+  signatures (`"Co-Authored-By: Claude"`, `"Generated with Claude Code"`),
+  filtered to repos that actually have a manifest file. This is the group
+  where an unreviewed AI-generated dependency line is more likely to have
+  slipped through.
+
+**Results: 0/8 baseline, 0/10 AI-assisted — 0% phantom-dependency
+prevalence in both groups**, across 531 unique declared dependencies
+checked. See `PREVALENCE_REPORT.md` and `prevalence_chart.png` for the full
+breakdown (generated by `compile_prevalence.py`).
+
+This is a small, honestly-reported null result, not a "the risk doesn't
+exist" claim — 18 repos is a small sample, the AI-assisted group was found
+via a narrow keyword search (real commit co-authorship trailers, which not
+every AI-assisted commit includes), and published research on model output
+directly (see below) puts real hallucination rates at single-digit
+percentages, meaning a sample this size can easily land at 0% by chance.
+What this run does demonstrate: the tool works end-to-end against real
+repos, it survived two rounds of "wait, is that actually a false positive?"
+scrutiny, and it's now something you can point at any repo yourself.
+
+## The generation tester (original tool)
 
 1. Sends a fixed set of realistic coding prompts to Claude (`prompts.py`),
    sampled multiple times each.
@@ -42,11 +142,7 @@ There are two analysis modes:
     worth squatting, but one a model reliably invents across most reruns is
     predictable enough to profitably pre-register.
 
-**This tool never registers, publishes, or claims any of the flagged package
-names.** It only detects and reports — actually squatting those names, even
-"to prove the point," would itself be the attack this project is about.
-
-## Running it
+### Running it
 
 Two ways to generate the code samples:
 
@@ -72,7 +168,7 @@ For the PHR/RHR rerun methodology, save `N` responses per prompt as
 python3 rerun_analyze.py
 ```
 
-## Results (this run)
+### Results (this run)
 
 Tested against Claude Sonnet 5 (via Claude.ai, manual mode) on 2026-08-11,
 one sample per prompt across 8 tasks:
@@ -119,7 +215,7 @@ developer trusting existence-checks alone, or an AI agent auto-installing
 based on the import statement, could easily end up depending on the wrong
 `jwt` package. That's a distinct but related risk to slopsquatting:
 namespace collision between the intended library and an unrelated
-same-named one.
+same-named one. Tracked as [issue #2](https://github.com/Thawne11/AI-Hallucination-Slopsquat-Detector/issues/2).
 
 This is a genuine, unmodified result, not a cherry-picked one — and this
 time it followed the actual rerun methodology researchers use, not just a
@@ -141,11 +237,20 @@ hallucinations.
   measure — a real but abandoned/renamed package would false-negative, and a
   same-named-but-unrelated package would false-positive as "real" (see the
   `jwt`/`PyJWT` case above).
-- Local/self-referential imports (`from utils import ...`) are filtered
-  heuristically, not perfectly.
-- Small, fixed prompt set — a real audit (like the 199,845-prompt study
-  above) would sample far more tasks, languages, and models.
-- Even the rerun methodology only used 5 reruns × 3 prompts here. At a true
+- `slopsquat-scan` only checks manifest files, not arbitrary source-code
+  imports — a phantom package referenced only in a code comment or an
+  unused import wouldn't be caught, by design (see "Scope decision" above).
+- The AI-assisted repo group was found via a narrow commit-message keyword
+  search — it's a real sample of AI-assisted repos, not an exhaustive or
+  randomly-sampled one, so the 0% prevalence result shouldn't be
+  over-generalized (see "Prevalence study" above).
+- Local/self-referential imports (`from utils import ...`) in the
+  generation-tester's `extractor.py` are filtered heuristically, not
+  perfectly.
+- Small, fixed prompt set for the generation tester — a real audit (like
+  the 199,845-prompt study above) would sample far more tasks, languages,
+  and models.
+- Even the rerun methodology only used 5 reruns x 3 prompts here. At a true
   hallucination rate of ~5%, 15 samples have a real chance of showing zero
   events by chance alone — more reruns would tighten that estimate.
 
@@ -159,6 +264,9 @@ hallucinations.
 - If you run AI coding agents with auto-install permissions, gate package
   installation behind an allowlist or a registry-existence + reputation
   check — don't let the agent `pip install` whatever it just imagined.
+- Existence isn't intent: a name resolving on the registry doesn't mean
+  it's the package you meant (the `jwt`/`PyJWT` case). Verification needs
+  to go one step further than "does this exist."
 - This is a good case study for why "AI hallucination" isn't just a UX
   annoyance — in a coding context it's a concrete injection point for
   supply-chain compromise.
@@ -170,4 +278,5 @@ hallucinations.
 - [Socket: The Rise of Slopsquatting](https://socket.dev/blog/slopsquatting-how-ai-hallucinations-are-fueling-a-new-class-of-supply-chain-attacks) — industry writeup on the attack pattern.
 
 This project is a small, reproducible way to run the same kind of check
-yourself, against whichever model and prompts you care about.
+yourself, against whichever model, prompts, or real-world repos you care
+about.

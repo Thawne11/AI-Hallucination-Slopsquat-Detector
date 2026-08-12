@@ -1,0 +1,12 @@
+{
+  "repo_url": "https://github.com/recomposesh/recompose",
+  "manifest_files": [
+    "package.json",
+    "packages/contracts/package.json",
+    "packages/engine/package.json",
+    "apps/desktop/package.json"
+  ],
+  "packages_checked": 85,
+  "phantom_packages": [],
+  "error": null
+}

@@ -1,0 +1,10 @@
+{
+  "repo_url": "https://github.com/michaeloboyle/scrantenna",
+  "manifest_files": [
+    "requirements.txt",
+    "setup.py"
+  ],
+  "packages_checked": 8,
+  "phantom_packages": [],
+  "error": null
+}

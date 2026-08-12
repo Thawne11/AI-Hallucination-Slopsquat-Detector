@@ -1,0 +1,9 @@
+{
+  "repo_url": "https://github.com/chalk/chalk",
+  "manifest_files": [
+    "package.json"
+  ],
+  "packages_checked": 11,
+  "phantom_packages": [],
+  "error": null
+}

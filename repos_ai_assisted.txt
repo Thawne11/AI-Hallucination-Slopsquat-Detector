@@ -1,0 +1,23 @@
+# Group B -- AI-assisted (treatment group)
+# Discovered via `gh search commits` for real commit messages containing
+# AI co-authorship signatures ("Co-Authored-By: Claude", "Generated with
+# Claude Code"). These are real public repos with real AI-assisted commits,
+# filtered during a discovery pass to ones that actually have a dependency
+# manifest file. This is the group where unreviewed AI-generated dependency
+# lines are more likely to surface than in mature, heavily-reviewed OSS.
+
+# Python
+https://github.com/DockerDiscordControl/DockerDiscordControl-Linux
+https://github.com/IsaiahFite/the-email-crab
+https://github.com/Safron9944/telegram-bot
+https://github.com/SmartAI/mcp-chaos
+https://github.com/devonjones/cortex-utils
+https://github.com/michaeloboyle/scrantenna
+
+# JavaScript / Node
+https://github.com/mnfst/manifest
+https://github.com/recomposesh/recompose
+https://github.com/aliasghar-me/dukkanify
+
+# Mixed (both ecosystems in one repo)
+https://github.com/rodaddy/open-brain

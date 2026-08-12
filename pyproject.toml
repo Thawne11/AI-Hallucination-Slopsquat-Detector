@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "slopsquat-scan"
+version = "0.1.0"
+description = "Check a repo's declared dependencies for phantom (hallucinated) packages -- a slopsquatting supply-chain-risk scanner."
+requires-python = ">=3.10"
+dependencies = ["requests"]
+
+[project.scripts]
+slopsquat-scan = "cli:main"
+
+[tool.setuptools]
+py-modules = ["cli", "registry"]
+packages = ["scanner"]

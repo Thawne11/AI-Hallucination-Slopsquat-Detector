@@ -1,0 +1,15 @@
+{
+  "repo_url": "https://github.com/rodaddy/open-brain",
+  "manifest_files": [
+    "package.json",
+    "python/pyproject.toml",
+    "python/openbrain-memory/pyproject.toml",
+    "python/openbrain-provider/pyproject.toml",
+    "python/openbrain/pyproject.toml",
+    "docs/standards/typescript-exemplar/package.json",
+    "docs/standards/python-exemplar/pyproject.toml"
+  ],
+  "packages_checked": 37,
+  "phantom_packages": [],
+  "error": null
+}
