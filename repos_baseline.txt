@@ -1,0 +1,16 @@
+# Group A -- Baseline (control group)
+# Well-known, actively maintained, heavily-reviewed public repos.
+# Expected result: at or near 0% phantom dependencies. Low numbers here
+# validate that the scanner isn't just noisy/false-positive-prone.
+
+# Python
+https://github.com/psf/requests
+https://github.com/pallets/flask
+https://github.com/tiangolo/fastapi
+https://github.com/python-poetry/poetry
+
+# JavaScript / Node
+https://github.com/expressjs/express
+https://github.com/axios/axios
+https://github.com/lodash/lodash
+https://github.com/chalk/chalk
