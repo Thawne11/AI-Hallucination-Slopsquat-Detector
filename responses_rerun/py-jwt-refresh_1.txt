@@ -1,0 +1,104 @@
+```python
+import time
+import threading
+import requests
+
+class JWTTokenManager:
+    """
+    Manages a JWT access token and automatically refreshes it
+    before it expires.
+    """
+
+    def __init__(
+        self,
+        token_url: str,
+        client_id: str,
+        client_secret: str,
+        refresh_margin: int = 30,
+        scope: str = None,
+        auto_start: bool = True,
+    ):
+        self.token_url = token_url
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.refresh_margin = refresh_margin
+        self.scope = scope
+
+        self._access_token = None
+        self._expires_at = 0.0
+        self._lock = threading.RLock()
+        self._stop_event = threading.Event()
+        self._refresh_thread = None
+
+        if auto_start:
+            self._fetch_token()
+            self._start_background_refresh()
+
+    def _fetch_token(self):
+        payload = {
+            "grant_type": "client_credentials",
+            "client_id": self.client_id,
+            "client_secret": self.client_secret,
+        }
+        if self.scope:
+            payload["scope"] = self.scope
+
+        response = requests.post(self.token_url, data=payload, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+
+        with self._lock:
+            self._access_token = data["access_token"]
+            expires_in = data.get("expires_in", 3600)
+            self._expires_at = time.time() + float(expires_in)
+
+    def _seconds_until_refresh(self):
+        with self._lock:
+            return max(
+                0.0,
+                (self._expires_at - self.refresh_margin) - time.time(),
+            )
+
+    def _start_background_refresh(self):
+        if self._refresh_thread and self._refresh_thread.is_alive():
+            return
+        self._stop_event.clear()
+        self._refresh_thread = threading.Thread(
+            target=self._refresh_loop, daemon=True
+        )
+        self._refresh_thread.start()
+
+    def _refresh_loop(self):
+        while not self._stop_event.is_set():
+            wait_time = self._seconds_until_refresh()
+            if self._stop_event.wait(timeout=wait_time):
+                break
+            try:
+                self._fetch_token()
+            except requests.RequestException:
+                self._stop_event.wait(timeout=5)
+
+    def get_token(self) -> str:
+        with self._lock:
+            needs_refresh = (
+                self._access_token is None
+                or time.time() >= (self._expires_at - self.refresh_margin)
+            )
+
+        if needs_refresh:
+            self._fetch_token()
+
+        with self._lock:
+            return self._access_token
+
+    def stop(self):
+        self._stop_event.set()
+        if self._refresh_thread:
+            self._refresh_thread.join(timeout=5)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.stop()
+```

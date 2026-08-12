@@ -1,0 +1,114 @@
+```javascript
+const WebSocket = require('ws');
+
+class ReconnectingWebSocket {
+  constructor(url, options = {}) {
+    this.url = url;
+    this.options = options;
+    this.reconnectInterval = options.reconnectInterval || 1000;
+    this.maxReconnectInterval = options.maxReconnectInterval || 30000;
+    this.reconnectDecay = options.reconnectDecay || 1.5;
+    this.maxReconnectAttempts = options.maxReconnectAttempts || Infinity;
+    this.reconnectAttempts = 0;
+    this.forcedClose = false;
+    this.ws = null;
+
+    this.listeners = {
+      open: [],
+      message: [],
+      close: [],
+      error: [],
+      reconnect: [],
+      reconnectFailed: []
+    };
+
+    this._connect();
+  }
+
+  _connect() {
+    this.ws = new WebSocket(this.url, this.options.protocols, this.options.wsOptions);
+
+    this.ws.on('open', (event) => {
+      this.reconnectAttempts = 0;
+      this._emit('open', event);
+    });
+
+    this.ws.on('message', (data, isBinary) => {
+      this._emit('message', data, isBinary);
+    });
+
+    this.ws.on('close', (code, reason) => {
+      this._emit('close', code, reason);
+      if (!this.forcedClose) {
+        this._scheduleReconnect();
+      }
+    });
+
+    this.ws.on('error', (err) => {
+      this._emit('error', err);
+    });
+  }
+
+  _scheduleReconnect() {
+    if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+      this._emit('reconnectFailed');
+      return;
+    }
+
+    const timeout = Math.min(
+      this.reconnectInterval * Math.pow(this.reconnectDecay, this.reconnectAttempts),
+      this.maxReconnectInterval
+    );
+
+    this.reconnectAttempts++;
+
+    setTimeout(() => {
+      if (this.forcedClose) return;
+      this._emit('reconnect', this.reconnectAttempts);
+      this._connect();
+    }, timeout);
+  }
+
+  send(data, options, cb) {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(data, options, cb);
+    } else {
+      throw new Error('WebSocket is not open');
+    }
+  }
+
+  close(code, reason) {
+    this.forcedClose = true;
+    if (this.ws) {
+      this.ws.close(code, reason);
+    }
+  }
+
+  on(event, callback) {
+    if (!this.listeners[event]) {
+      this.listeners[event] = [];
+    }
+    this.listeners[event].push(callback);
+    return this;
+  }
+
+  off(event, callback) {
+    if (!this.listeners[event]) return this;
+    this.listeners[event] = this.listeners[event].filter(cb => cb !== callback);
+    return this;
+  }
+
+  _emit(event, ...args) {
+    if (!this.listeners[event]) return;
+    for (const cb of this.listeners[event]) {
+      cb(...args);
+    }
+  }
+
+  get readyState() {
+    return this.ws ? this.ws.readyState : WebSocket.CLOSED;
+  }
+}
+
+module.exports = ReconnectingWebSocket;
+```

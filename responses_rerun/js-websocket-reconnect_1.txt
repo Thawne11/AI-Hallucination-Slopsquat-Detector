@@ -1,0 +1,125 @@
+```javascript
+const WebSocket = require('ws');
+
+class ReconnectingWebSocket {
+  constructor(url, options = {}) {
+    this.url = url;
+    this.options = options.wsOptions || {};
+    this.protocols = options.protocols;
+
+    this.minDelay = options.minDelay ?? 1000;
+    this.maxDelay = options.maxDelay ?? 30000;
+    this.factor = options.factor ?? 2;
+    this.jitter = options.jitter ?? 0.2;
+    this.maxRetries = options.maxRetries ?? Infinity;
+
+    this.attempt = 0;
+    this.shouldReconnect = true;
+    this.reconnectTimer = null;
+    this.ws = null;
+
+    this.listeners = {
+      open: [],
+      message: [],
+      close: [],
+      error: [],
+      reconnect: [],
+      reconnectFailed: [],
+    };
+
+    this._connect();
+  }
+
+  on(event, cb) {
+    if (this.listeners[event]) {
+      this.listeners[event].push(cb);
+    }
+    return this;
+  }
+
+  _emit(event, ...args) {
+    for (const cb of this.listeners[event] || []) {
+      try {
+        cb(...args);
+      } catch (err) {
+        console.error(`Error in "${event}" handler:`, err);
+      }
+    }
+  }
+
+  _connect() {
+    this.ws = new WebSocket(this.url, this.protocols, this.options);
+
+    this.ws.on('open', () => {
+      this.attempt = 0;
+      this._emit('open');
+    });
+
+    this.ws.on('message', (data) => {
+      this._emit('message', data);
+    });
+
+    this.ws.on('error', (err) => {
+      this._emit('error', err);
+    });
+
+    this.ws.on('close', (code, reason) => {
+      this._emit('close', code, reason);
+      if (this.shouldReconnect) {
+        this._scheduleReconnect();
+      }
+    });
+  }
+
+  _scheduleReconnect() {
+    if (this.attempt >= this.maxRetries) {
+      this._emit('reconnectFailed');
+      return;
+    }
+
+    this.attempt += 1;
+
+    const rawDelay = Math.min(
+      this.maxDelay,
+      this.minDelay * Math.pow(this.factor, this.attempt - 1)
+    );
+    const jitterOffset = rawDelay * this.jitter * (Math.random() * 2 - 1);
+    const delay = Math.max(0, Math.round(rawDelay + jitterOffset));
+
+    this._emit('reconnect', this.attempt, delay);
+
+    this.reconnectTimer = setTimeout(() => {
+      if (this.shouldReconnect) {
+        this._connect();
+      }
+    }, delay);
+  }
+
+  send(data, cb) {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(data, cb);
+    } else {
+      const err = new Error('WebSocket is not open');
+      if (cb) cb(err);
+      else throw err;
+    }
+  }
+
+  close(code, reason) {
+    this.shouldReconnect = false;
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
+    }
+    if (this.ws) {
+      this.ws.close(code, reason);
+    }
+  }
+
+  get readyState() {
+    return this.ws ? this.ws.readyState : WebSocket.CLOSED;
+  }
+}
+
+module.exports = ReconnectingWebSocket;
+```

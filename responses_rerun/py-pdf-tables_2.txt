@@ -1,0 +1,73 @@
+```python
+import pdfplumber
+import pandas as pd
+
+def extract_tables_from_pdf(pdf_path):
+    """
+    Extract all tables from a PDF file and return them as a list of pandas DataFrames.
+
+    Args:
+        pdf_path (str): Path to the PDF file.
+
+    Returns:
+        list[pd.DataFrame]: A list of DataFrames, one for each table found.
+    """
+    dataframes = []
+
+    with pdfplumber.open(pdf_path) as pdf:
+        for page_number, page in enumerate(pdf.pages, start=1):
+            tables = page.extract_tables()
+
+            for table_index, table in enumerate(tables, start=1):
+                if not table or len(table) < 2:
+                    continue
+
+                header = table[0]
+                rows = table[1:]
+
+                header = [
+                    col if col is not None else f"col_{i}"
+                    for i, col in enumerate(header)
+                ]
+
+                df = pd.DataFrame(rows, columns=header)
+                df.attrs["page_number"] = page_number
+                df.attrs["table_index"] = table_index
+
+                dataframes.append(df)
+
+    return dataframes
+
+def save_tables_to_csv(dataframes, output_prefix="table"):
+    """
+    Save a list of DataFrames to separate CSV files.
+
+    Args:
+        dataframes (list[pd.DataFrame]): List of DataFrames to save.
+        output_prefix (str): Prefix for output CSV filenames.
+    """
+    for i, df in enumerate(dataframes, start=1):
+        filename = f"{output_prefix}_{i}.csv"
+        df.to_csv(filename, index=False)
+        print(f"Saved: {filename}")
+
+if __name__ == "__main__":
+    import sys
+
+    if len(sys.argv) < 2:
+        print("Usage: python extract_tables.py <path_to_pdf> [output_prefix]")
+        sys.exit(1)
+
+    pdf_file = sys.argv[1]
+    prefix = sys.argv[2] if len(sys.argv) > 2 else "table"
+
+    extracted_tables = extract_tables_from_pdf(pdf_file)
+
+    print(f"Found {len(extracted_tables)} table(s) in '{pdf_file}'.")
+
+    for idx, df in enumerate(extracted_tables, start=1):
+        print(f"\n--- Table {idx} (Page {df.attrs.get('page_number')}) ---")
+        print(df.head())
+
+    save_tables_to_csv(extracted_tables, prefix)
+```

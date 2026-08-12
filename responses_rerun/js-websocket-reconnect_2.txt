@@ -1,0 +1,122 @@
+```javascript
+const WebSocket = require('ws');
+
+class ReconnectingWebSocket {
+  constructor(url, options = {}) {
+    this.url = url;
+    this.options = options.wsOptions || {};
+    this.ws = null;
+
+    this.initialDelay = options.initialDelay || 1000;
+    this.maxDelay = options.maxDelay || 30000;
+    this.factor = options.factor || 2;
+    this.jitter = options.jitter !== undefined ? options.jitter : 0.2;
+    this.maxRetries = options.maxRetries || Infinity;
+
+    this.currentDelay = this.initialDelay;
+    this.retryCount = 0;
+    this.manualClose = false;
+    this.reconnectTimer = null;
+
+    this.listeners = {
+      open: [],
+      message: [],
+      close: [],
+      error: [],
+      reconnect: [],
+      reconnectFailed: [],
+    };
+
+    this.connect();
+  }
+
+  connect() {
+    this.manualClose = false;
+    this.ws = new WebSocket(this.url, this.options);
+
+    this.ws.on('open', (...args) => {
+      this.retryCount = 0;
+      this.currentDelay = this.initialDelay;
+      this._emit('open', ...args);
+    });
+
+    this.ws.on('message', (...args) => {
+      this._emit('message', ...args);
+    });
+
+    this.ws.on('error', (...args) => {
+      this._emit('error', ...args);
+    });
+
+    this.ws.on('close', (...args) => {
+      this._emit('close', ...args);
+      if (!this.manualClose) {
+        this._scheduleReconnect();
+      }
+    });
+  }
+
+  _scheduleReconnect() {
+    if (this.retryCount >= this.maxRetries) {
+      this._emit('reconnectFailed');
+      return;
+    }
+
+    clearTimeout(this.reconnectTimer);
+
+    let delay = Math.min(this.currentDelay, this.maxDelay);
+    if (this.jitter > 0) {
+      const jitterAmount = delay * this.jitter;
+      delay = delay - jitterAmount + Math.random() * (2 * jitterAmount);
+    }
+
+    this.retryCount++;
+    this._emit('reconnect', this.retryCount, Math.round(delay));
+
+    this.reconnectTimer = setTimeout(() => {
+      this.connect();
+    }, delay);
+
+    this.currentDelay = Math.min(this.currentDelay * this.factor, this.maxDelay);
+  }
+
+  send(data, cb) {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(data, cb);
+    } else {
+      const err = new Error('WebSocket is not open');
+      if (cb) cb(err);
+      else throw err;
+    }
+  }
+
+  close(code, reason) {
+    this.manualClose = true;
+    clearTimeout(this.reconnectTimer);
+    if (this.ws) {
+      this.ws.close(code, reason);
+    }
+  }
+
+  on(event, listener) {
+    if (!this.listeners[event]) this.listeners[event] = [];
+    this.listeners[event].push(listener);
+    return this;
+  }
+
+  off(event, listener) {
+    if (!this.listeners[event]) return this;
+    this.listeners[event] = this.listeners[event].filter((l) => l !== listener);
+    return this;
+  }
+
+  _emit(event, ...args) {
+    if (!this.listeners[event]) return;
+    for (const listener of this.listeners[event]) {
+      listener(...args);
+    }
+  }
+}
+
+module.exports = ReconnectingWebSocket;
+```

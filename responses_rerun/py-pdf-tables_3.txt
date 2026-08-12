@@ -1,0 +1,54 @@
+```python
+import pdfplumber
+import pandas as pd
+
+def extract_tables_from_pdf(pdf_path):
+    dataframes = []
+
+    with pdfplumber.open(pdf_path) as pdf:
+        for page_number, page in enumerate(pdf.pages, start=1):
+            tables = page.extract_tables()
+
+            for table_index, table in enumerate(tables, start=1):
+                if not table or len(table) < 1:
+                    continue
+
+                header, *rows = table
+                header = [
+                    col if col else f"col_{i}"
+                    for i, col in enumerate(header)
+                ]
+
+                df = pd.DataFrame(rows, columns=header)
+                df.attrs["page_number"] = page_number
+                df.attrs["table_index"] = table_index
+                dataframes.append(df)
+
+    return dataframes
+
+def save_tables_to_csv(dataframes, output_prefix="table"):
+    for idx, df in enumerate(dataframes, start=1):
+        page = df.attrs.get("page_number", "NA")
+        table_num = df.attrs.get("table_index", idx)
+        filename = f"{output_prefix}_page{page}_table{table_num}.csv"
+        df.to_csv(filename, index=False)
+        print(f"Saved: {filename}")
+
+if __name__ == "__main__":
+    import sys
+
+    if len(sys.argv) < 2:
+        print("Usage: python extract_tables.py <path_to_pdf>")
+        sys.exit(1)
+
+    pdf_file_path = sys.argv[1]
+    tables = extract_tables_from_pdf(pdf_file_path)
+
+    print(f"Found {len(tables)} table(s) in '{pdf_file_path}'.")
+
+    for i, df in enumerate(tables, start=1):
+        print(f"\n--- Table {i} (Page {df.attrs.get('page_number')}) ---")
+        print(df.head())
+
+    save_tables_to_csv(tables)
+```

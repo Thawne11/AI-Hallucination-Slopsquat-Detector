@@ -1,0 +1,126 @@
+```python
+import time
+import threading
+import jwt
+import requests
+
+class JWTTokenManager:
+    def __init__(
+        self,
+        token_url,
+        client_id,
+        client_secret=None,
+        refresh_token=None,
+        access_token=None,
+        refresh_margin=60,
+        auto_start=True,
+    ):
+        self.token_url = token_url
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.refresh_token = refresh_token
+
+        self._access_token = access_token
+        self._expires_at = None
+        self._refresh_margin = refresh_margin
+
+        self._lock = threading.RLock()
+        self._stop_event = threading.Event()
+        self._refresh_thread = None
+
+        if self._access_token:
+            self._expires_at = self._get_expiry(self._access_token)
+
+        if auto_start:
+            self.start()
+
+    def get_token(self):
+        with self._lock:
+            if self._needs_refresh():
+                self._refresh_now()
+            return self._access_token
+
+    def start(self):
+        if self._refresh_thread and self._refresh_thread.is_alive():
+            return
+        self._stop_event.clear()
+        self._refresh_thread = threading.Thread(
+            target=self._refresh_loop, daemon=True
+        )
+        self._refresh_thread.start()
+
+    def stop(self):
+        self._stop_event.set()
+        if self._refresh_thread:
+            self._refresh_thread.join(timeout=5)
+
+    def __enter__(self):
+        self.start()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.stop()
+
+    def _get_expiry(self, token):
+        try:
+            payload = jwt.decode(token, options={"verify_signature": False})
+            return payload.get("exp")
+        except jwt.PyJWTError:
+            return None
+
+    def _needs_refresh(self):
+        if not self._access_token or self._expires_at is None:
+            return True
+        return time.time() >= (self._expires_at - self._refresh_margin)
+
+    def _refresh_now(self):
+        data = {
+            "grant_type": "refresh_token",
+            "refresh_token": self.refresh_token,
+            "client_id": self.client_id,
+        }
+        if self.client_secret:
+            data["client_secret"] = self.client_secret
+
+        response = requests.post(self.token_url, data=data, timeout=10)
+        response.raise_for_status()
+        payload = response.json()
+
+        new_access_token = payload.get("access_token")
+        if not new_access_token:
+            raise RuntimeError("Token refresh response missing 'access_token'")
+
+        new_refresh_token = payload.get("refresh_token")
+        expires_in = payload.get("expires_in")
+
+        with self._lock:
+            self._access_token = new_access_token
+            if new_refresh_token:
+                self.refresh_token = new_refresh_token
+
+            if expires_in is not None:
+                self._expires_at = time.time() + float(expires_in)
+            else:
+                self._expires_at = self._get_expiry(new_access_token)
+
+        return new_access_token
+
+    def _refresh_loop(self):
+        while not self._stop_event.is_set():
+            with self._lock:
+                if self._needs_refresh():
+                    try:
+                        self._refresh_now()
+                    except Exception:
+                        self._stop_event.wait(5)
+                        continue
+
+                if self._expires_at is not None:
+                    sleep_for = max(
+                        1, self._expires_at - time.time() - self._refresh_margin
+                    )
+                else:
+                    sleep_for = 5
+
+            self._stop_event.wait(min(sleep_for, 30))
+```

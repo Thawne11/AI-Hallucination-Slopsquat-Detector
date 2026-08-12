@@ -1,0 +1,139 @@
+```python
+import time
+import threading
+import base64
+import json
+import requests
+
+class JWTTokenManager:
+    def __init__(
+        self,
+        token_url,
+        client_id=None,
+        client_secret=None,
+        refresh_token=None,
+        grant_type="client_credentials",
+        refresh_margin=60,
+        auto_start=True,
+        extra_params=None,
+        timeout=10,
+    ):
+        self.token_url = token_url
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.refresh_token_value = refresh_token
+        self.grant_type = grant_type
+        self.refresh_margin = refresh_margin
+        self.extra_params = extra_params or {}
+        self.timeout = timeout
+
+        self._access_token = None
+        self._expires_at = 0
+        self._lock = threading.RLock()
+        self._stop_event = threading.Event()
+        self._refresh_thread = None
+
+        self._fetch_token()
+
+        if auto_start:
+            self.start_auto_refresh()
+
+    def get_token(self):
+        with self._lock:
+            if self._is_expired():
+                self._fetch_token()
+            return self._access_token
+
+    def start_auto_refresh(self):
+        if self._refresh_thread and self._refresh_thread.is_alive():
+            return
+        self._stop_event.clear()
+        self._refresh_thread = threading.Thread(
+            target=self._refresh_loop, daemon=True
+        )
+        self._refresh_thread.start()
+
+    def stop_auto_refresh(self):
+        self._stop_event.set()
+        if self._refresh_thread:
+            self._refresh_thread.join(timeout=5)
+
+    def close(self):
+        self.stop_auto_refresh()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
+    def _is_expired(self):
+        return time.time() >= (self._expires_at - self.refresh_margin)
+
+    def _seconds_until_refresh(self):
+        return max(0, self._expires_at - self.refresh_margin - time.time())
+
+    def _build_payload(self):
+        payload = {"grant_type": self.grant_type}
+
+        if self.grant_type == "client_credentials":
+            payload["client_id"] = self.client_id
+            payload["client_secret"] = self.client_secret
+        elif self.grant_type == "refresh_token":
+            payload["refresh_token"] = self.refresh_token_value
+            if self.client_id:
+                payload["client_id"] = self.client_id
+            if self.client_secret:
+                payload["client_secret"] = self.client_secret
+
+        payload.update(self.extra_params)
+        return payload
+
+    def _fetch_token(self):
+        payload = self._build_payload()
+        response = requests.post(self.token_url, data=payload, timeout=self.timeout)
+        response.raise_for_status()
+        data = response.json()
+
+        access_token = data.get("access_token")
+        if not access_token:
+            raise ValueError("Token response did not contain 'access_token'")
+
+        if "refresh_token" in data and data["refresh_token"]:
+            self.refresh_token_value = data["refresh_token"]
+
+        expires_in = data.get("expires_in")
+        if expires_in is not None:
+            expires_at = time.time() + float(expires_in)
+        else:
+            expires_at = self._decode_jwt_exp(access_token)
+
+        with self._lock:
+            self._access_token = access_token
+            self._expires_at = expires_at
+
+    @staticmethod
+    def _decode_jwt_exp(token, default_ttl=300):
+        try:
+            payload_b64 = token.split(".")[1]
+            padding = "=" * (-len(payload_b64) % 4)
+            payload_json = base64.urlsafe_b64decode(payload_b64 + padding)
+            payload = json.loads(payload_json)
+            exp = payload.get("exp")
+            if exp:
+                return float(exp)
+        except Exception:
+            pass
+        return time.time() + default_ttl
+
+    def _refresh_loop(self):
+        while not self._stop_event.is_set():
+            wait_time = self._seconds_until_refresh()
+            if self._stop_event.wait(timeout=wait_time):
+                break
+            try:
+                with self._lock:
+                    self._fetch_token()
+            except Exception:
+                self._stop_event.wait(timeout=5)
+```

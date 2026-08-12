@@ -1,0 +1,117 @@
+```javascript
+const WebSocket = require('ws');
+
+class ReconnectingWebSocket {
+  constructor(url, options = {}) {
+    this.url = url;
+    this.wsOptions = options.wsOptions || {};
+    this.minDelay = options.minDelay || 1000;
+    this.maxDelay = options.maxDelay || 30000;
+    this.factor = options.factor || 2;
+    this.jitter = options.jitter !== undefined ? options.jitter : 0.2;
+    this.maxRetries = options.maxRetries || Infinity;
+
+    this.ws = null;
+    this.attempt = 0;
+    this.reconnectTimer = null;
+    this.manualClose = false;
+
+    this.listeners = {
+      open: [],
+      message: [],
+      close: [],
+      error: [],
+      reconnecting: [],
+      reconnectFailed: [],
+    };
+
+    this._connect();
+  }
+
+  on(event, cb) {
+    if (this.listeners[event]) {
+      this.listeners[event].push(cb);
+    }
+    return this;
+  }
+
+  _emit(event, ...args) {
+    for (const cb of this.listeners[event] || []) {
+      try {
+        cb(...args);
+      } catch (err) {
+        console.error(`Error in "${event}" listener:`, err);
+      }
+    }
+  }
+
+  _connect() {
+    this.manualClose = false;
+    this.ws = new WebSocket(this.url, this.wsOptions);
+
+    this.ws.on('open', () => {
+      this.attempt = 0;
+      this._emit('open');
+    });
+
+    this.ws.on('message', (data, isBinary) => {
+      this._emit('message', data, isBinary);
+    });
+
+    this.ws.on('close', (code, reason) => {
+      this._emit('close', code, reason);
+      if (!this.manualClose) {
+        this._scheduleReconnect();
+      }
+    });
+
+    this.ws.on('error', (err) => {
+      this._emit('error', err);
+    });
+  }
+
+  _scheduleReconnect() {
+    if (this.attempt >= this.maxRetries) {
+      this._emit('reconnectFailed');
+      return;
+    }
+
+    const baseDelay = Math.min(
+      this.maxDelay,
+      this.minDelay * Math.pow(this.factor, this.attempt)
+    );
+    const jitterOffset = baseDelay * this.jitter * (Math.random() * 2 - 1);
+    const delay = Math.max(0, Math.round(baseDelay + jitterOffset));
+
+    this.attempt++;
+    this._emit('reconnecting', this.attempt, delay);
+
+    clearTimeout(this.reconnectTimer);
+    this.reconnectTimer = setTimeout(() => {
+      this._connect();
+    }, delay);
+  }
+
+  send(data, options) {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(data, options);
+      return true;
+    }
+    return false;
+  }
+
+  close(code, reason) {
+    this.manualClose = true;
+    clearTimeout(this.reconnectTimer);
+    if (this.ws) {
+      this.ws.close(code, reason);
+    }
+  }
+
+  get readyState() {
+    return this.ws ? this.ws.readyState : WebSocket.CLOSED;
+  }
+}
+
+module.exports = ReconnectingWebSocket;
+```

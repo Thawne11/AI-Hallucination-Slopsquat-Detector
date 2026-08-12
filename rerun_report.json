@@ -1,0 +1,138 @@
+{
+  "py-pdf-tables": {
+    "samples_run": 5,
+    "phr": 0.0,
+    "hallucinated_names": {},
+    "rhr_by_name": {},
+    "samples": [
+      {
+        "sample": 1,
+        "packages_found": [
+          "pandas",
+          "pdfplumber"
+        ],
+        "hallucinated_packages": []
+      },
+      {
+        "sample": 2,
+        "packages_found": [
+          "pandas",
+          "pdfplumber"
+        ],
+        "hallucinated_packages": []
+      },
+      {
+        "sample": 3,
+        "packages_found": [
+          "pandas",
+          "pdfplumber"
+        ],
+        "hallucinated_packages": []
+      },
+      {
+        "sample": 4,
+        "packages_found": [
+          "pandas",
+          "pdfplumber"
+        ],
+        "hallucinated_packages": []
+      },
+      {
+        "sample": 5,
+        "packages_found": [
+          "pandas",
+          "pdfplumber"
+        ],
+        "hallucinated_packages": []
+      }
+    ]
+  },
+  "py-jwt-refresh": {
+    "samples_run": 5,
+    "phr": 0.0,
+    "hallucinated_names": {},
+    "rhr_by_name": {},
+    "samples": [
+      {
+        "sample": 1,
+        "packages_found": [
+          "requests"
+        ],
+        "hallucinated_packages": []
+      },
+      {
+        "sample": 2,
+        "packages_found": [
+          "requests"
+        ],
+        "hallucinated_packages": []
+      },
+      {
+        "sample": 3,
+        "packages_found": [
+          "jwt",
+          "requests"
+        ],
+        "hallucinated_packages": []
+      },
+      {
+        "sample": 4,
+        "packages_found": [
+          "requests"
+        ],
+        "hallucinated_packages": []
+      },
+      {
+        "sample": 5,
+        "packages_found": [
+          "jwt",
+          "requests"
+        ],
+        "hallucinated_packages": []
+      }
+    ]
+  },
+  "js-websocket-reconnect": {
+    "samples_run": 5,
+    "phr": 0.0,
+    "hallucinated_names": {},
+    "rhr_by_name": {},
+    "samples": [
+      {
+        "sample": 1,
+        "packages_found": [
+          "ws"
+        ],
+        "hallucinated_packages": []
+      },
+      {
+        "sample": 2,
+        "packages_found": [
+          "ws"
+        ],
+        "hallucinated_packages": []
+      },
+      {
+        "sample": 3,
+        "packages_found": [
+          "ws"
+        ],
+        "hallucinated_packages": []
+      },
+      {
+        "sample": 4,
+        "packages_found": [
+          "ws"
+        ],
+        "hallucinated_packages": []
+      },
+      {
+        "sample": 5,
+        "packages_found": [
+          "ws"
+        ],
+        "hallucinated_packages": []
+      }
+    ]
+  }
+}
