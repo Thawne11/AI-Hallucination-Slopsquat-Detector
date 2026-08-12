@@ -1,0 +1,12 @@
+{
+  "repo_url": "https://github.com/aliasghar-me/dukkanify",
+  "manifest_files": [
+    "package.json",
+    "packages/core/package.json",
+    "apps/web/package.json",
+    "apps/api/package.json"
+  ],
+  "packages_checked": 60,
+  "phantom_packages": [],
+  "error": null
+}

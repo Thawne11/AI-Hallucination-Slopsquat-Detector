@@ -1,0 +1,9 @@
+{
+  "repo_url": "https://github.com/tiangolo/fastapi",
+  "manifest_files": [
+    "pyproject.toml"
+  ],
+  "packages_checked": 16,
+  "phantom_packages": [],
+  "error": null
+}

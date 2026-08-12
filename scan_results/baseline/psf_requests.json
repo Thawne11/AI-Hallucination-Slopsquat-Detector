@@ -1,0 +1,11 @@
+{
+  "repo_url": "https://github.com/psf/requests",
+  "manifest_files": [
+    "pyproject.toml",
+    "setup.py",
+    "docs/requirements.txt"
+  ],
+  "packages_checked": 7,
+  "phantom_packages": [],
+  "error": null
+}

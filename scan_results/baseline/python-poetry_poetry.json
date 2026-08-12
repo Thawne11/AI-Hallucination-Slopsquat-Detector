@@ -1,0 +1,9 @@
+{
+  "repo_url": "https://github.com/python-poetry/poetry",
+  "manifest_files": [
+    "pyproject.toml"
+  ],
+  "packages_checked": 34,
+  "phantom_packages": [],
+  "error": null
+}

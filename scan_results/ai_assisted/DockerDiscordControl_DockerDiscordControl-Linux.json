@@ -1,0 +1,9 @@
+{
+  "repo_url": "https://github.com/DockerDiscordControl/DockerDiscordControl-Linux",
+  "manifest_files": [
+    "requirements.txt"
+  ],
+  "packages_checked": 34,
+  "phantom_packages": [],
+  "error": null
+}

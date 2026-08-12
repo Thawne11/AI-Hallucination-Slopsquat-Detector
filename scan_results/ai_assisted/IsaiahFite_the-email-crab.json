@@ -1,0 +1,9 @@
+{
+  "repo_url": "https://github.com/IsaiahFite/the-email-crab",
+  "manifest_files": [
+    "requirements.txt"
+  ],
+  "packages_checked": 2,
+  "phantom_packages": [],
+  "error": null
+}
