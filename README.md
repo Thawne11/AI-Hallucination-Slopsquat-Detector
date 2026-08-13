@@ -127,10 +127,9 @@ scrutiny, and it's now something you can point at any repo yourself.
    often each type of task produces one.
 5. Renders a bar chart (`chart.py`) of hallucination rate by task.
 
-There are two analysis modes:
+There are three analysis modes:
 
-- **`analyze.py`** — one sample per prompt, across all 8 prompts. Quick
-  breadth check.
+- **`analyze.py`** — one sample per prompt. Quick breadth check.
 - **`rerun_analyze.py`** — follows the methodology used in published
   slopsquatting research ([arXiv 2501.19012](https://arxiv.org/pdf/2501.19012)):
   rerun the same prompt multiple times and measure two separate rates:
@@ -141,6 +140,13 @@ There are two analysis modes:
     that actually matters for attackers — a name that appears once isn't
     worth squatting, but one a model reliably invents across most reruns is
     predictable enough to profitably pre-register.
+- **`multi_model_rerun.py`** — the same PHR/RHR methodology, but across
+  multiple *models* instead of one. See "Cross-model comparison" below.
+
+`prompts.py` started at 8 prompts (used for the single-model results below)
+and was expanded to 22 for the multi-model pilot, leaning further into
+niche/uncommon library territory since novel tasks are more likely to
+induce hallucination than well-trodden ones.
 
 ### Running it
 
@@ -231,12 +237,111 @@ the *tooling* for measuring it — point it at more prompts, more reruns, or
 an older/smaller model, and the same pipeline will surface real
 hallucinations.
 
+## Cross-model comparison: local open-weight models
+
+Every result up to this point was 0% (or, for the `jwt` finding, a related
+but not-hallucinated risk), all against one model. The obvious next step is
+comparing across models ([issue #4](https://github.com/Thawne11/AI-Hallucination-Slopsquat-Detector/issues/4)).
+The eventual goal is Claude/GPT/Gemini/open models at real scale (100+
+prompts x 20+ reruns) -- this is a reduced pilot, scoped to what's actually
+available right now: no paid API billing exists yet for Claude/GPT/Gemini,
+so this pilot uses two **local, free** models via Ollama, generated
+directly through `providers.py` (no manual copy-paste, unlike the Claude.ai
+manual mode -- local models can be called programmatically):
+
+- **`qwen2.5-coder:7b`** -- a capable, code-specialized model.
+- **`llama3.2:3b`** -- a smaller, general-purpose model, chosen specifically
+  because published research suggests hallucination rate scales down with
+  model capability, making it the more likely of the two to actually
+  produce a non-zero result.
+
+22 prompts x 10 reruns x 2 models = 440 generations, run via
+`python3 multi_model_rerun.py`.
+
+### Raw result: finally, non-zero numbers
+
+**qwen2.5-coder:7b: 9.1% PHR (20/220). llama3.2:3b: 10.9% PHR (24/220).**
+The first non-zero hallucination rates anywhere in this project.
+
+### But most of that was a measurement artifact, not real hallucination
+
+Before trusting those numbers, the same scrutiny that caught the
+`slopsquat-scan` false positives applied here: `paho` was flagged in
+**100% of `py-mqtt-client` samples, in both models** -- a suspiciously
+uniform pattern, not the kind of noise you'd expect from genuine
+hallucination. Checked it directly:
+
+```
+paho        -> 404  (doesn't exist under that name)
+paho-mqtt   -> 200  (the real package)
+```
+
+Same story as the earlier `jwt`/`PyJWT` finding -- `paho-mqtt` is a real,
+correctly-used, extremely common MQTT library whose *import* name (`import
+paho.mqtt.client`) differs from its *PyPI distribution* name. The model did
+nothing wrong; the checker was checking the wrong name. `saml2`/`pysaml2`
+turned out to be the exact same pattern, a third independent instance of it.
+Separately, the gRPC prompts (`py-grpc-client`, `js-grpc-client`) invite the
+model to invent a locally-generated stub module name (`myservice_pb2`),
+since a generic prompt has no real `.proto` file to generate from --
+checking an invented local filename against a public registry is a
+category error, not a hallucination signal.
+
+Fixed both, without needing to regenerate anything (the extracted package
+lists were already saved):
+- `known_aliases.py` -- a short, explicitly incomplete list of known
+  import-name/distribution-name mismatches (`jwt`->`PyJWT`,
+  `paho`->`paho-mqtt`, `saml2`->`pysaml2`), consulted by `registry.py`
+  before concluding a name is hallucinated.
+- `extractor.py` now excludes names ending in `_pb2` / `_pb2_grpc`.
+- `reanalyze_corrected.py` reruns the classification (not the generation)
+  against the saved raw data with both fixes applied, plus one manual,
+  explicitly-documented exclusion (`your_service` -- the same class of
+  local-stub artifact as the `_pb2` cases, just not suffix-matched).
+
+### Corrected result
+
+**qwen2.5-coder:7b: 0.5% PHR (1/220). llama3.2:3b: 3.6% PHR (8/220).**
+
+![Raw vs corrected PHR by model](multi_model_chart.png)
+
+A real, credible, and non-trivial difference between models -- `llama3.2:3b`
+hallucinates roughly 7x as often as `qwen2.5-coder:7b`, consistent with the
+published finding that hallucination rate tracks model capability. Every
+remaining flagged name was individually verified against the real registry
+(`rate-limit-memory`, `rate-limiter-middleware`, `ip2proxy`, `ipaddr5`,
+`samllib`, `@grpc/client`, `json2htmlparser`, `js2pdf`,
+`@aws-sdk/client-graph-cql`, `@aws-sdk/client-graphql` -- all confirmed 404,
+genuine hallucinations). Notably, 8 of the 9 genuine hallucinations are npm
+packages, not PyPI ones -- too small a sample to generalize from, but worth
+noting if this pilot is extended.
+
+### What this pilot does and doesn't show
+
+This is still a small run (22 prompts, 2 models, one point in time) --
+enough to demonstrate the cross-model pipeline works and to produce the
+first real, non-zero, individually-verified hallucination findings in this
+project, not enough to make strong claims about hallucination rates in
+general. Claude, GPT, and Gemini remain out of scope until paid API billing
+exists for them; `providers.py` is deliberately structured so adding one is
+a small addition, not a rewrite.
+
 ## Limitations (be upfront about these)
 
 - Package-existence checks are a proxy for hallucination, not a perfect
   measure — a real but abandoned/renamed package would false-negative, and a
   same-named-but-unrelated package would false-positive as "real" (see the
   `jwt`/`PyJWT` case above).
+- `known_aliases.py` is a short, hand-maintained, explicitly incomplete
+  list — it only grows as new import-name/distribution-name mismatches are
+  found in practice (three so far: `jwt`, `paho`, `saml2`). It will miss
+  ones not yet encountered.
+- The multi-model pilot's gRPC prompts are structurally prone to inducing
+  invented *local* module names (since no real `.proto` file exists for a
+  generic prompt) — the `_pb2`/`_pb2_grpc` suffix filter catches the common
+  case, but non-suffix-matched placeholders (like `your_service`) need
+  manual review. A better version of this prompt would supply real `.proto`
+  content instead of asking for one from nothing.
 - `slopsquat-scan` only checks manifest files, not arbitrary source-code
   imports — a phantom package referenced only in a code comment or an
   unused import wouldn't be caught, by design (see "Scope decision" above).
