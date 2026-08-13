@@ -1,0 +1,4098 @@
+[
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 0,
+    "packages_found": [
+      "PyPDF2",
+      "pandas"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 1,
+    "packages_found": [
+      "fitz",
+      "pandas"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 2,
+    "packages_found": [
+      "camelot",
+      "pandas"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 3,
+    "packages_found": [
+      "PyPDF2",
+      "pandas",
+      "pdfminer"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 4,
+    "packages_found": [
+      "PyPDF2",
+      "tabula"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 5,
+    "packages_found": [
+      "PyPDF2",
+      "pandas",
+      "pdfminer"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 6,
+    "packages_found": [
+      "pdfplumber"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 7,
+    "packages_found": [
+      "PyPDF2",
+      "pandas",
+      "pdfminer"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 8,
+    "packages_found": [
+      "PyPDF2",
+      "tabula"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 9,
+    "packages_found": [
+      "PyPDF2",
+      "pandas",
+      "tabula"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 0,
+    "packages_found": [
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 1,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 2,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 3,
+    "packages_found": [
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 4,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 5,
+    "packages_found": [
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 6,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 7,
+    "packages_found": [
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 8,
+    "packages_found": [
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 9,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 0,
+    "packages_found": [
+      "jwt",
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 1,
+    "packages_found": [
+      "jwt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 2,
+    "packages_found": [
+      "jwt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 3,
+    "packages_found": [
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 4,
+    "packages_found": [
+      "aiohttp",
+      "jwt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 5,
+    "packages_found": [
+      "jwt",
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 6,
+    "packages_found": [
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 7,
+    "packages_found": [
+      "jwt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 8,
+    "packages_found": [
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 9,
+    "packages_found": [
+      "jwt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 0,
+    "packages_found": [
+      "boto3",
+      "botocore"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 1,
+    "packages_found": [
+      "boto3",
+      "botocore"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 2,
+    "packages_found": [
+      "boto3",
+      "botocore"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 3,
+    "packages_found": [
+      "boto3",
+      "botocore",
+      "tqdm"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 4,
+    "packages_found": [
+      "boto3",
+      "botocore"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 5,
+    "packages_found": [
+      "boto3",
+      "botocore"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 6,
+    "packages_found": [
+      "boto3",
+      "botocore"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 7,
+    "packages_found": [
+      "boto3",
+      "botocore"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 8,
+    "packages_found": [
+      "boto3",
+      "botocore",
+      "tqdm"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 9,
+    "packages_found": [
+      "boto3",
+      "botocore"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 0,
+    "packages_found": [
+      "fuzzywuzzy",
+      "pandas"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 1,
+    "packages_found": [
+      "Levenshtein"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 2,
+    "packages_found": [
+      "fuzzywuzzy",
+      "pandas"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 3,
+    "packages_found": [
+      "fuzzymatch"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 4,
+    "packages_found": [
+      "fuzzywuzzy",
+      "pandas"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 5,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 6,
+    "packages_found": [
+      "jellyfish"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 7,
+    "packages_found": [
+      "jellyfish"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 8,
+    "packages_found": [
+      "fuzzywuzzy"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 9,
+    "packages_found": [
+      "fuzzywuzzy",
+      "pandas"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-rate-limit",
+    "sample": 0,
+    "packages_found": [
+      "express",
+      "ioredis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-rate-limit",
+    "sample": 1,
+    "packages_found": [
+      "express",
+      "express-rate-limit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-rate-limit",
+    "sample": 2,
+    "packages_found": [
+      "express",
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-rate-limit",
+    "sample": 3,
+    "packages_found": [
+      "express",
+      "express-rate-limit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-rate-limit",
+    "sample": 4,
+    "packages_found": [
+      "express",
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-rate-limit",
+    "sample": 5,
+    "packages_found": [
+      "express",
+      "express-rate-limit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-rate-limit",
+    "sample": 6,
+    "packages_found": [
+      "express-rate-limit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-rate-limit",
+    "sample": 7,
+    "packages_found": [
+      "express",
+      "express-rate-limit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-rate-limit",
+    "sample": 8,
+    "packages_found": [
+      "express",
+      "rate-limit-memory"
+    ],
+    "hallucinated_packages": [
+      "rate-limit-memory"
+    ]
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-rate-limit",
+    "sample": 9,
+    "packages_found": [
+      "express",
+      "ioredis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-csv-stream",
+    "sample": 0,
+    "packages_found": [
+      "JSONStream",
+      "csv-parser"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-csv-stream",
+    "sample": 1,
+    "packages_found": [
+      "csv-parser"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-csv-stream",
+    "sample": 2,
+    "packages_found": [
+      "csv-parser"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-csv-stream",
+    "sample": 3,
+    "packages_found": [
+      "fast-csv"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-csv-stream",
+    "sample": 4,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-csv-stream",
+    "sample": 5,
+    "packages_found": [
+      "csv-parser"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-csv-stream",
+    "sample": 6,
+    "packages_found": [
+      "fast-csv"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-csv-stream",
+    "sample": 7,
+    "packages_found": [
+      "csv-parser"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-csv-stream",
+    "sample": 8,
+    "packages_found": [
+      "fast-csv"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-csv-stream",
+    "sample": 9,
+    "packages_found": [
+      "csv-parser"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 0,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 1,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 2,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 3,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 4,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 5,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 6,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 7,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 8,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 9,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 0,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 1,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 2,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 3,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 4,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 5,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 6,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 7,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 8,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 9,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-grpc-client",
+    "sample": 0,
+    "packages_found": [
+      "google",
+      "grpc",
+      "my_service_pb2",
+      "my_service_pb2_grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-grpc-client",
+    "sample": 1,
+    "packages_found": [
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-grpc-client",
+    "sample": 2,
+    "packages_found": [
+      "google",
+      "grpc",
+      "myservice_pb2",
+      "myservice_pb2_grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-grpc-client",
+    "sample": 3,
+    "packages_found": [
+      "google",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-grpc-client",
+    "sample": 4,
+    "packages_found": [
+      "google",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-grpc-client",
+    "sample": 5,
+    "packages_found": [
+      "google",
+      "grpc",
+      "myservice_pb2"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-grpc-client",
+    "sample": 6,
+    "packages_found": [
+      "google",
+      "grpc",
+      "my_service_pb2_grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-grpc-client",
+    "sample": 7,
+    "packages_found": [
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-grpc-client",
+    "sample": 8,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-grpc-client",
+    "sample": 9,
+    "packages_found": [
+      "google",
+      "grpc",
+      "my_service_pb2",
+      "my_service_pb2_grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 0,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 1,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 2,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 3,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 4,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 5,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 6,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 7,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 8,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 9,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 0,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 1,
+    "packages_found": [
+      "mmh3"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 2,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 3,
+    "packages_found": [
+      "mmh3"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 4,
+    "packages_found": [
+      "MurmurHash3"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 5,
+    "packages_found": [
+      "mmh3"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 6,
+    "packages_found": [
+      "bitarray",
+      "mmh3"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 7,
+    "packages_found": [
+      "mmh3"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 8,
+    "packages_found": [
+      "mmh3"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 9,
+    "packages_found": [
+      "mmh3"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-saml-parse",
+    "sample": 0,
+    "packages_found": [
+      "saml2"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-saml-parse",
+    "sample": 1,
+    "packages_found": [
+      "saml2"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-saml-parse",
+    "sample": 2,
+    "packages_found": [
+      "saml2"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-saml-parse",
+    "sample": 3,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-saml-parse",
+    "sample": 4,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-saml-parse",
+    "sample": 5,
+    "packages_found": [
+      "lxml"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-saml-parse",
+    "sample": 6,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-saml-parse",
+    "sample": 7,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-saml-parse",
+    "sample": 8,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-saml-parse",
+    "sample": 9,
+    "packages_found": [
+      "saml2"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 0,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 1,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 2,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 3,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 4,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 5,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 6,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 7,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 8,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 9,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-redis-lock",
+    "sample": 0,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-redis-lock",
+    "sample": 1,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-redis-lock",
+    "sample": 2,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-redis-lock",
+    "sample": 3,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-redis-lock",
+    "sample": 4,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-redis-lock",
+    "sample": 5,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-redis-lock",
+    "sample": 6,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-redis-lock",
+    "sample": 7,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-redis-lock",
+    "sample": 8,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "py-redis-lock",
+    "sample": 9,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 0,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 1,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 2,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 3,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 4,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 5,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 6,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 7,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 8,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 9,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-grpc-client",
+    "sample": 0,
+    "packages_found": [
+      "@grpc/grpc-js",
+      "@grpc/proto-loader"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-grpc-client",
+    "sample": 1,
+    "packages_found": [
+      "@grpc/proto-loader",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-grpc-client",
+    "sample": 2,
+    "packages_found": [
+      "@grpc/proto-loader",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-grpc-client",
+    "sample": 3,
+    "packages_found": [
+      "@grpc/grpc-js",
+      "@grpc/proto-loader"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-grpc-client",
+    "sample": 4,
+    "packages_found": [
+      "@grpc/grpc-js",
+      "@grpc/proto-loader"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-grpc-client",
+    "sample": 5,
+    "packages_found": [
+      "@grpc/proto-loader",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-grpc-client",
+    "sample": 6,
+    "packages_found": [
+      "@grpc/proto-loader",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-grpc-client",
+    "sample": 7,
+    "packages_found": [
+      "@grpc/proto-loader",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-grpc-client",
+    "sample": 8,
+    "packages_found": [
+      "@grpc/grpc-js",
+      "@grpc/proto-loader"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-grpc-client",
+    "sample": 9,
+    "packages_found": [
+      "@grpc/proto-loader",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 0,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 1,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 2,
+    "packages_found": [
+      "qr-image"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 3,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 4,
+    "packages_found": [
+      "qr-image"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 5,
+    "packages_found": [
+      "qr-image"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 6,
+    "packages_found": [
+      "qr-image"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 7,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 8,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 9,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 0,
+    "packages_found": [
+      "pdf-invoice-generator"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 1,
+    "packages_found": [
+      "pdf-invoice"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 2,
+    "packages_found": [
+      "pdfkit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 3,
+    "packages_found": [
+      "pdfkit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 4,
+    "packages_found": [
+      "html-pdf"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 5,
+    "packages_found": [
+      "pdfmake"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 6,
+    "packages_found": [
+      "invoice-generator"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 7,
+    "packages_found": [
+      "pdfkit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 8,
+    "packages_found": [
+      "jspdf"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 9,
+    "packages_found": [
+      "docx"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 0,
+    "packages_found": [
+      "sanitize-html"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 1,
+    "packages_found": [
+      "sanitize-html"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 2,
+    "packages_found": [
+      "showdown"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 3,
+    "packages_found": [
+      "marked",
+      "sanitize-html"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 4,
+    "packages_found": [
+      "markdown-it"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 5,
+    "packages_found": [
+      "dompurify",
+      "marked"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 6,
+    "packages_found": [
+      "sanitize-html"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 7,
+    "packages_found": [
+      "marked",
+      "sanitize-html"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 8,
+    "packages_found": [
+      "markdown-it"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 9,
+    "packages_found": [
+      "markdown-it"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-image-resize",
+    "sample": 0,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-image-resize",
+    "sample": 1,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-image-resize",
+    "sample": 2,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-image-resize",
+    "sample": 3,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-image-resize",
+    "sample": 4,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-image-resize",
+    "sample": 5,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-image-resize",
+    "sample": 6,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-image-resize",
+    "sample": 7,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-image-resize",
+    "sample": 8,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-image-resize",
+    "sample": 9,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-graphql-client",
+    "sample": 0,
+    "packages_found": [
+      "@apollo/client",
+      "node-fetch"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-graphql-client",
+    "sample": 1,
+    "packages_found": [
+      "@octokit/graphql",
+      "node-fetch"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-graphql-client",
+    "sample": 2,
+    "packages_found": [
+      "graphql-ws",
+      "node-fetch",
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-graphql-client",
+    "sample": 3,
+    "packages_found": [
+      "@apollo/client"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-graphql-client",
+    "sample": 4,
+    "packages_found": [
+      "@apollo/client",
+      "node-fetch"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-graphql-client",
+    "sample": 5,
+    "packages_found": [
+      "@octokit/graphql",
+      "node-fetch"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-graphql-client",
+    "sample": 6,
+    "packages_found": [
+      "graphql",
+      "node-fetch"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-graphql-client",
+    "sample": 7,
+    "packages_found": [
+      "@apollo/client",
+      "node-fetch"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-graphql-client",
+    "sample": 8,
+    "packages_found": [
+      "@apollo/client"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_id": "js-graphql-client",
+    "sample": 9,
+    "packages_found": [
+      "@apollo/client"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 0,
+    "packages_found": [
+      "PyPDF2",
+      "pandas",
+      "pdfplumber"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 1,
+    "packages_found": [
+      "PyPDF2",
+      "pandas",
+      "pdf2image"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 2,
+    "packages_found": [
+      "PyPDF2",
+      "pandas",
+      "pdfplumber"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 3,
+    "packages_found": [
+      "PIL",
+      "PyPDF2",
+      "numpy",
+      "pandas",
+      "pdf2image"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 4,
+    "packages_found": [
+      "PyPDF2",
+      "pandas",
+      "pdfplumber"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 5,
+    "packages_found": [
+      "PyPDF2",
+      "pandas",
+      "pdfplumber"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 6,
+    "packages_found": [
+      "PyPDF2",
+      "pandas",
+      "pdfplumber"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 7,
+    "packages_found": [
+      "PyPDF2",
+      "pandas"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 8,
+    "packages_found": [
+      "PyPDF2",
+      "pandas",
+      "pdfplumber"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-pdf-tables",
+    "sample": 9,
+    "packages_found": [
+      "PyPDF2",
+      "pandas",
+      "pdfplumber",
+      "tabula"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 0,
+    "packages_found": [
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 1,
+    "packages_found": [
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 2,
+    "packages_found": [
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 3,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 4,
+    "packages_found": [
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 5,
+    "packages_found": [
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 6,
+    "packages_found": [
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 7,
+    "packages_found": [
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 8,
+    "packages_found": [
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-retry-backoff",
+    "sample": 9,
+    "packages_found": [
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 0,
+    "packages_found": [
+      "jwt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 1,
+    "packages_found": [
+      "jwt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 2,
+    "packages_found": [
+      "jwt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 3,
+    "packages_found": [
+      "jwt",
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 4,
+    "packages_found": [
+      "jwt",
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 5,
+    "packages_found": [
+      "jwt",
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 6,
+    "packages_found": [
+      "jwt",
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 7,
+    "packages_found": [
+      "jwt",
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 8,
+    "packages_found": [
+      "jwt",
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-jwt-refresh",
+    "sample": 9,
+    "packages_found": [
+      "jwt",
+      "requests"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 0,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 1,
+    "packages_found": [
+      "boto3",
+      "botocore"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 2,
+    "packages_found": [
+      "boto3",
+      "botocore"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 3,
+    "packages_found": [
+      "boto3",
+      "botocore"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 4,
+    "packages_found": [
+      "boto3",
+      "botocore"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 5,
+    "packages_found": [
+      "boto3",
+      "tqdm"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 6,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 7,
+    "packages_found": [
+      "boto3",
+      "botocore"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 8,
+    "packages_found": [
+      "boto3",
+      "botocore",
+      "tqdm"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-s3-multipart",
+    "sample": 9,
+    "packages_found": [
+      "boto3",
+      "botocore"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 0,
+    "packages_found": [
+      "fuzzywuzzy"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 1,
+    "packages_found": [
+      "fuzzywuzzy"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 2,
+    "packages_found": [
+      "fuzzywuzzy",
+      "numpy"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 3,
+    "packages_found": [
+      "fuzzywuzzy"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 4,
+    "packages_found": [
+      "fuzzywuzzy"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 5,
+    "packages_found": [
+      "fuzzify"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 6,
+    "packages_found": [
+      "fuzzywuzzy"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 7,
+    "packages_found": [
+      "fuzzywuzzy"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 8,
+    "packages_found": [
+      "fuzzywuzzy"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-fuzzy-dedupe",
+    "sample": 9,
+    "packages_found": [
+      "fuzzywuzzy"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-rate-limit",
+    "sample": 0,
+    "packages_found": [
+      "express",
+      "rate-limiter-middleware"
+    ],
+    "hallucinated_packages": [
+      "rate-limiter-middleware"
+    ]
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-rate-limit",
+    "sample": 1,
+    "packages_found": [
+      "express",
+      "ip-address"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-rate-limit",
+    "sample": 2,
+    "packages_found": [
+      "express",
+      "ip2proxy",
+      "redis"
+    ],
+    "hallucinated_packages": [
+      "ip2proxy"
+    ]
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-rate-limit",
+    "sample": 3,
+    "packages_found": [
+      "express",
+      "express-rate-limit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-rate-limit",
+    "sample": 4,
+    "packages_found": [
+      "express",
+      "express-rate-limit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-rate-limit",
+    "sample": 5,
+    "packages_found": [
+      "express",
+      "express-rate-limit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-rate-limit",
+    "sample": 6,
+    "packages_found": [
+      "express-rate-limit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-rate-limit",
+    "sample": 7,
+    "packages_found": [
+      "express",
+      "express-rate-limit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-rate-limit",
+    "sample": 8,
+    "packages_found": [
+      "express",
+      "ipaddr5"
+    ],
+    "hallucinated_packages": [
+      "ipaddr5"
+    ]
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-rate-limit",
+    "sample": 9,
+    "packages_found": [
+      "express",
+      "ip-info",
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-csv-stream",
+    "sample": 0,
+    "packages_found": [
+      "fs-extra"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-csv-stream",
+    "sample": 1,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-csv-stream",
+    "sample": 2,
+    "packages_found": [
+      "fs-extra",
+      "stream-transform"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-csv-stream",
+    "sample": 3,
+    "packages_found": [
+      "fs-extra"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-csv-stream",
+    "sample": 4,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-csv-stream",
+    "sample": 5,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-csv-stream",
+    "sample": 6,
+    "packages_found": [
+      "fs-extra"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-csv-stream",
+    "sample": 7,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-csv-stream",
+    "sample": 8,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-csv-stream",
+    "sample": 9,
+    "packages_found": [
+      "papaparse"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 0,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 1,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 2,
+    "packages_found": [
+      "console",
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 3,
+    "packages_found": [
+      "socket.io-client"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 4,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 5,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 6,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 7,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 8,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-websocket-reconnect",
+    "sample": 9,
+    "packages_found": [
+      "ws"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 0,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 1,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 2,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 3,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 4,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 5,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 6,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 7,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 8,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-mqtt-client",
+    "sample": 9,
+    "packages_found": [
+      "paho"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-grpc-client",
+    "sample": 0,
+    "packages_found": [
+      "google",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-grpc-client",
+    "sample": 1,
+    "packages_found": [
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-grpc-client",
+    "sample": 2,
+    "packages_found": [
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-grpc-client",
+    "sample": 3,
+    "packages_found": [
+      "grpc",
+      "your_service"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-grpc-client",
+    "sample": 4,
+    "packages_found": [
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-grpc-client",
+    "sample": 5,
+    "packages_found": [
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-grpc-client",
+    "sample": 6,
+    "packages_found": [
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-grpc-client",
+    "sample": 7,
+    "packages_found": [
+      "google",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-grpc-client",
+    "sample": 8,
+    "packages_found": [
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-grpc-client",
+    "sample": 9,
+    "packages_found": [
+      "channel_credentials_pb2",
+      "channel_credentials_pb2_grpc",
+      "google",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 0,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 1,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 2,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 3,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 4,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 5,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 6,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 7,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 8,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-merkle-tree",
+    "sample": 9,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 0,
+    "packages_found": [
+      "bitarray",
+      "mmh3"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 1,
+    "packages_found": [
+      "bitarray",
+      "mmh3"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 2,
+    "packages_found": [
+      "bitarray",
+      "mmh3"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 3,
+    "packages_found": [
+      "mmh3"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 4,
+    "packages_found": [
+      "bitarray",
+      "mmh3"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 5,
+    "packages_found": [
+      "mmh3"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 6,
+    "packages_found": [
+      "bitarray",
+      "mmh3"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 7,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 8,
+    "packages_found": [
+      "bitarray",
+      "mmh3"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-bloom-filter",
+    "sample": 9,
+    "packages_found": [
+      "mmh3"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-saml-parse",
+    "sample": 0,
+    "packages_found": [
+      "saml2"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-saml-parse",
+    "sample": 1,
+    "packages_found": [
+      "saml"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-saml-parse",
+    "sample": 2,
+    "packages_found": [
+      "saml2"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-saml-parse",
+    "sample": 3,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-saml-parse",
+    "sample": 4,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-saml-parse",
+    "sample": 5,
+    "packages_found": [
+      "samllib"
+    ],
+    "hallucinated_packages": [
+      "samllib"
+    ]
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-saml-parse",
+    "sample": 6,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-saml-parse",
+    "sample": 7,
+    "packages_found": [
+      "saml2"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-saml-parse",
+    "sample": 8,
+    "packages_found": [
+      "cryptography",
+      "saml2"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-saml-parse",
+    "sample": 9,
+    "packages_found": [
+      "saml"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 0,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 1,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 2,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 3,
+    "packages_found": [
+      "PIL",
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 4,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 5,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 6,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 7,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 8,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-qrcode-gen",
+    "sample": 9,
+    "packages_found": [
+      "PIL",
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-redis-lock",
+    "sample": 0,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-redis-lock",
+    "sample": 1,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-redis-lock",
+    "sample": 2,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-redis-lock",
+    "sample": 3,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-redis-lock",
+    "sample": 4,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-redis-lock",
+    "sample": 5,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-redis-lock",
+    "sample": 6,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-redis-lock",
+    "sample": 7,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-redis-lock",
+    "sample": 8,
+    "packages_found": [
+      "redis"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "py-redis-lock",
+    "sample": 9,
+    "packages_found": [],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 0,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 1,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 2,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 3,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 4,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 5,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 6,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 7,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 8,
+    "packages_found": [
+      "loglevel",
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-mqtt-client",
+    "sample": 9,
+    "packages_found": [
+      "mqtt"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-grpc-client",
+    "sample": 0,
+    "packages_found": [
+      "@grpc/proto-loader",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-grpc-client",
+    "sample": 1,
+    "packages_found": [
+      "@grpc/proto-loader",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-grpc-client",
+    "sample": 2,
+    "packages_found": [
+      "@grpc/proto-loader",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-grpc-client",
+    "sample": 3,
+    "packages_found": [
+      "@grpc/proto-loader",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-grpc-client",
+    "sample": 4,
+    "packages_found": [
+      "@grpc/client"
+    ],
+    "hallucinated_packages": [
+      "@grpc/client"
+    ]
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-grpc-client",
+    "sample": 5,
+    "packages_found": [
+      "@grpc/proto-loader",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-grpc-client",
+    "sample": 6,
+    "packages_found": [
+      "@grpc/proto-loader",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-grpc-client",
+    "sample": 7,
+    "packages_found": [
+      "@grpc/proto-loader",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-grpc-client",
+    "sample": 8,
+    "packages_found": [
+      "@grpc/proto-loader",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-grpc-client",
+    "sample": 9,
+    "packages_found": [
+      "@grpc/proto-loader",
+      "grpc"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 0,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 1,
+    "packages_found": [
+      "canvas"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 2,
+    "packages_found": [
+      "canvas",
+      "qr-code"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 3,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 4,
+    "packages_found": [
+      "canvas",
+      "qr-code"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 5,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 6,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 7,
+    "packages_found": [
+      "canvas",
+      "uuid"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 8,
+    "packages_found": [
+      "canvas"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-qrcode-gen",
+    "sample": 9,
+    "packages_found": [
+      "qrcode"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 0,
+    "packages_found": [
+      "pdfkit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 1,
+    "packages_found": [
+      "pdfkit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 2,
+    "packages_found": [
+      "pdfkit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 3,
+    "packages_found": [
+      "json2htmlparser",
+      "jspdf"
+    ],
+    "hallucinated_packages": [
+      "json2htmlparser"
+    ]
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 4,
+    "packages_found": [
+      "js2pdf",
+      "pdfkit"
+    ],
+    "hallucinated_packages": [
+      "js2pdf"
+    ]
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 5,
+    "packages_found": [
+      "jspdf",
+      "pdfmake"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 6,
+    "packages_found": [
+      "jspdf",
+      "moment"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 7,
+    "packages_found": [
+      "pdfkit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 8,
+    "packages_found": [
+      "pdfkit"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-pdf-invoice",
+    "sample": 9,
+    "packages_found": [
+      "jspdf",
+      "xlsx"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 0,
+    "packages_found": [
+      "markdown-it"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 1,
+    "packages_found": [
+      "markdown-it",
+      "sanitize-html"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 2,
+    "packages_found": [
+      "dompurify",
+      "marked"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 3,
+    "packages_found": [
+      "markdown",
+      "sanitize-html"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 4,
+    "packages_found": [
+      "markdown",
+      "sanitize-html"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 5,
+    "packages_found": [
+      "sanitize-html"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 6,
+    "packages_found": [
+      "marked"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 7,
+    "packages_found": [
+      "marked"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 8,
+    "packages_found": [
+      "markdown",
+      "showdown"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-markdown-to-html",
+    "sample": 9,
+    "packages_found": [
+      "markdown",
+      "sanitize-html"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-image-resize",
+    "sample": 0,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-image-resize",
+    "sample": 1,
+    "packages_found": [
+      "express",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-image-resize",
+    "sample": 2,
+    "packages_found": [
+      "express",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-image-resize",
+    "sample": 3,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-image-resize",
+    "sample": 4,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-image-resize",
+    "sample": 5,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-image-resize",
+    "sample": 6,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-image-resize",
+    "sample": 7,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-image-resize",
+    "sample": 8,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-image-resize",
+    "sample": 9,
+    "packages_found": [
+      "express",
+      "multer",
+      "sharp"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-graphql-client",
+    "sample": 0,
+    "packages_found": [
+      "@aws-sdk/client-graph-cql",
+      "@aws-sdk/client-graphql",
+      "node-fetch"
+    ],
+    "hallucinated_packages": [
+      "@aws-sdk/client-graph-cql",
+      "@aws-sdk/client-graphql"
+    ]
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-graphql-client",
+    "sample": 1,
+    "packages_found": [
+      "@apollo/client",
+      "apollo-boost"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-graphql-client",
+    "sample": 2,
+    "packages_found": [
+      "@apollo/client",
+      "jsonwebtoken"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-graphql-client",
+    "sample": 3,
+    "packages_found": [
+      "graphql-tag"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-graphql-client",
+    "sample": 4,
+    "packages_found": [
+      "@apollo/client"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-graphql-client",
+    "sample": 5,
+    "packages_found": [
+      "graphql-tag",
+      "node-fetch"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-graphql-client",
+    "sample": 6,
+    "packages_found": [
+      "graphql-client",
+      "node-fetch"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-graphql-client",
+    "sample": 7,
+    "packages_found": [
+      "graphql-client"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-graphql-client",
+    "sample": 8,
+    "packages_found": [
+      "@apollo/client",
+      "node-fetch"
+    ],
+    "hallucinated_packages": []
+  },
+  {
+    "model": "llama3.2:3b",
+    "prompt_id": "js-graphql-client",
+    "sample": 9,
+    "packages_found": [
+      "@apollo/client",
+      "apollo-boost",
+      "graphql-request"
+    ],
+    "hallucinated_packages": []
+  }
+]

@@ -36,6 +36,14 @@ def extract_python_packages(code: str) -> set[str]:
     return {
         p for p in packages
         if p not in _STDLIB and p not in _LIKELY_LOCAL and not p.startswith("_")
+        # protoc-generated gRPC stub modules (e.g. `myservice_pb2`,
+        # `myservice_pb2_grpc`) are locally generated from a project's own
+        # .proto file, never published to PyPI under that name -- checking
+        # them against a public registry is a category error, not a
+        # hallucination signal. Found via a real run: a prompt asking for
+        # gRPC code invites the model to invent a plausible-but-local stub
+        # module name, since no real .proto file exists for a generic task.
+        and not p.endswith(("_pb2", "_pb2_grpc"))
     }
 
 
