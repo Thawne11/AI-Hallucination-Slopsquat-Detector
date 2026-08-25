@@ -326,6 +326,44 @@ general. Claude, GPT, and Gemini remain out of scope until paid API billing
 exists for them; `providers.py` is deliberately structured so adding one is
 a small addition, not a rewrite.
 
+## Tests
+
+```bash
+pip install -e ".[dev]"
+pytest
+```
+
+62 tests, no network required -- the registry HTTP layer and `git clone` are
+both stubbed, so the suite is deterministic and runs in well under a second.
+
+The point of the suite is not coverage for its own sake. Four separate
+false-positive bugs were found by hand while running this tool against real
+repos and real model output, and until now each was protected only by
+somebody remembering it. Every one is now pinned by an explicit regression
+test, named and commented with the repo or model run where it was
+originally found:
+
+| Bug | Guarding test |
+|---|---|
+| Test/fixture dirs walked (`python-poetry/poetry`) | `test_regression_skips_test_and_fixture_directories` |
+| Monorepo self-references (npm + Poetry paths) | `test_regression_*_monorepo_self_reference_is_not_a_phantom`, `test_regression_workspace_and_local_protocols_are_excluded`, `test_regression_poetry_path_deps_are_not_registry_deps` |
+| Import-name vs. distribution-name (`jwt`, `paho`, `saml2`) | `test_regression_import_name_resolves_via_distribution_name` |
+| gRPC `_pb2` stub modules | `test_regression_grpc_stub_modules_are_not_registry_packages` |
+
+These were verified by mutation rather than trusted: each fix was reverted
+in turn and the corresponding test confirmed to fail, so none of them are
+merely decorative. There are also tests for the inverse direction -- a
+sibling-looking package that the repo does *not* actually declare locally
+must still be flagged (`test_a_sibling_lookalike_that_is_not_declared_locally_is_still_flagged`),
+so the false-positive fixes cannot quietly turn into false negatives.
+
+Writing the suite also surfaced a real packaging bug: `registry.py` imports
+`known_aliases` at module level, but `known_aliases` was missing from
+`py-modules` in `pyproject.toml`. Editable installs masked it; a plain
+`pip install .` produced a wheel that installed fine and then crashed on
+import. Confirmed by inspecting the built wheel's contents, fixed, and
+re-confirmed.
+
 ## Limitations (be upfront about these)
 
 - Package-existence checks are a proxy for hallucination, not a perfect
