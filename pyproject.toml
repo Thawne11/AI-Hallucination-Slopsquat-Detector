@@ -9,9 +9,18 @@ description = "Check a repo's declared dependencies for phantom (hallucinated) p
 requires-python = ">=3.10"
 dependencies = ["requests"]
 
+[project.optional-dependencies]
+dev = ["pytest"]
+
 [project.scripts]
 slopsquat-scan = "cli:main"
 
 [tool.setuptools]
-py-modules = ["cli", "registry"]
+# known_aliases must stay listed here: registry.py imports it at module
+# level, so omitting it produces a wheel that installs but crashes on
+# import outside an editable install. Guarded by tests/test_packaging.py.
+py-modules = ["cli", "registry", "known_aliases"]
 packages = ["scanner"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
