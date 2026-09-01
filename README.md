@@ -19,10 +19,11 @@ supply-chain attack surface.
 
 This repo has two tools:
 
-1. **`slopsquat-scan`** — an installable CLI that clones a real repo and
-   checks its *declared* dependencies (`requirements.txt`, `package.json`,
-   etc.) against the real registries. Answers: does an existing codebase
-   already have a phantom dependency in it?
+1. **`slopsquat-scan`** — an installable CLI that checks a codebase's
+   *declared* dependencies (`requirements.txt`, `package.json`, etc.)
+   against the real registries. Point it at a local project or a remote
+   repo. Answers: does this codebase already have a phantom dependency
+   in it?
 2. **The generation tester** (`run.py` / `analyze.py` / `rerun_analyze.py`)
    — asks an LLM to write code and checks what it imports. Answers: how
    often does a model invent one in the first place?
@@ -31,18 +32,45 @@ This repo has two tools:
 names.** They only detect and report — actually squatting a flagged name,
 even "to prove the point," would itself be the attack this project is about.
 
-## `slopsquat-scan`: the repo-scanning CLI
+## `slopsquat-scan`: the dependency-scanning CLI
 
 ```bash
 pip install -e .
-slopsquat-scan scan https://github.com/psf/requests
+
+slopsquat-scan scan .                                  # the project you're in
+slopsquat-scan scan ./some/project                     # any local directory
+slopsquat-scan scan https://github.com/psf/requests    # a remote repo
 slopsquat-scan batch repos_baseline.txt --out-dir scan_results/baseline
 ```
 
-- `scan <repo-url>` — clone one repo (shallow, `--depth 1`), find its
-  manifest files, check every declared dependency, print a JSON report.
-- `batch <repos-file> [--out-dir DIR]` — same, for a list of repos, one JSON
-  report per repo.
+- `scan <target>` — `<target>` is a local path *or* a repo URL, detected
+  automatically. Local paths are read in place; remote URLs are shallow-cloned
+  (`--depth 1`) to a temp directory first. Prints a readable summary; pass
+  `--json` for the full report, `--out FILE` to save it.
+- `batch <targets-file> [--out-dir DIR]` — the same, for a list of targets,
+  one JSON report each.
+
+Scanning a **local** directory is the case that matters most in practice: the
+risk lands the moment you paste AI-generated code and install what it
+imported, which is before anything is committed or pushed. Requiring a
+published repo URL would mean the tool could only inspect other people's
+code, never the working copy in front of you.
+
+```
+$ slopsquat-scan scan ./my-project
+Target:                ./my-project
+Manifests found:       2
+Dependencies checked:  5
+
+2 phantom dependencies:
+  auto-retry-httpx  (python)      requirements.txt
+  ws-reconnect-pro  (javascript)  apps/web/package.json
+```
+
+Exit codes are distinct so CI can tell the failure kinds apart -- `0` clean,
+`1` phantom dependency found, `2` the scan itself failed (bad path, clone
+error). Collapsing the last two would leave a pipeline unable to
+distinguish "your dependencies are bad" from "the scanner could not run".
 
 **Scope decision: manifest files, not full source scan.** Slopsquatting's
 real attack surface is the *declared* dependency — what `pip install -r
@@ -335,7 +363,7 @@ pip install -e ".[dev]"
 pytest
 ```
 
-65 tests, no network required -- the registry HTTP layer and `git clone` are
+93 tests, no network required -- the registry HTTP layer and `git clone` are
 both stubbed, so the suite is deterministic and runs in well under a second.
 
 The point of the suite is not coverage for its own sake. Four separate
