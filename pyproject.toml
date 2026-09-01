@@ -22,7 +22,7 @@ slopsquat-scan = "cli:main"
 # known_aliases must stay listed here: registry.py imports it at module
 # level, so omitting it produces a wheel that installs but crashes on
 # import outside an editable install. Guarded by tests/test_packaging.py.
-py-modules = ["cli", "registry", "known_aliases"]
+py-modules = ["cli", "registry", "known_aliases", "risk", "popular_packages"]
 packages = ["scanner"]
 
 [tool.pytest.ini_options]
