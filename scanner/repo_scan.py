@@ -1,6 +1,10 @@
 """
-Clones a public repo, finds its dependency manifest files, and checks every
-declared package against the real PyPI/npm registries.
+Finds a codebase's dependency manifest files and checks every declared
+package against the real PyPI/npm registries.
+
+The scanning core (`scan_path`) works on a directory, so it serves both a
+working copy on disk and a cloned remote repo -- `scan_repo` is just a clone
+followed by a `scan_path`.
 """
 
 import os
@@ -54,14 +58,93 @@ def find_manifest_files(repo_path: str) -> list[str]:
     return found
 
 
-def scan_repo(repo_url: str) -> dict:
-    report = {
-        "repo_url": repo_url,
+REMOTE_PREFIXES = ("http://", "https://", "git://", "ssh://", "git@")
+
+
+def looks_like_remote(target: str) -> bool:
+    """Whether a scan target should be cloned rather than read from disk."""
+    return target.startswith(REMOTE_PREFIXES)
+
+
+def _new_report(target: str) -> dict:
+    return {
+        "target": target,
         "manifest_files": [],
         "packages_checked": 0,
         "phantom_packages": [],
         "error": None,
     }
+
+
+def _scan_directory_into(report: dict, root: str) -> None:
+    manifest_paths = find_manifest_files(root)
+    report["manifest_files"] = [os.path.relpath(p, root) for p in manifest_paths]
+
+    contents_by_path = {}
+    for manifest_path in manifest_paths:
+        try:
+            contents_by_path[manifest_path] = open(
+                manifest_path, encoding="utf-8", errors="ignore"
+            ).read()
+        except OSError:
+            continue
+
+    # First pass: collect names the codebase declares for itself (its own
+    # packages, e.g. every workspace member in a monorepo), so a dependency
+    # on a sibling package isn't mistaken for a phantom one.
+    local_names: set[str] = set()
+    for manifest_path, content in contents_by_path.items():
+        filename = os.path.basename(manifest_path)
+        own_name_parser = _OWN_NAME_PARSERS.get(filename)
+        if own_name_parser:
+            own_name = own_name_parser(content)
+            if own_name:
+                local_names.add(own_name.lower())
+
+    package_cache: dict[tuple[str, str], bool] = {}
+    seen: set[tuple[str, str]] = set()
+
+    for manifest_path, content in contents_by_path.items():
+        filename = os.path.basename(manifest_path)
+        ecosystem, parser_fn = MANIFEST_PARSERS[filename]
+        rel_path = os.path.relpath(manifest_path, root)
+
+        for name in parser_fn(content):
+            if name.lower() in local_names:
+                continue  # monorepo self-reference, not a registry dependency
+
+            key = (name, ecosystem)
+            seen.add(key)
+
+            if key not in package_cache:
+                package_cache[key] = registry_exists(name, ecosystem)
+                time.sleep(_REGISTRY_SLEEP)
+
+            if not package_cache[key]:
+                report["phantom_packages"].append({
+                    "name": name,
+                    "ecosystem": ecosystem,
+                    "found_in": rel_path,
+                })
+
+    report["packages_checked"] = len(seen)
+
+
+def scan_path(directory: str) -> dict:
+    """Scan a directory that already exists on disk (a working copy)."""
+    report = _new_report(str(directory))
+
+    if not os.path.isdir(directory):
+        report["error"] = f"not a directory: {directory}"
+        return report
+
+    _scan_directory_into(report, str(directory))
+    return report
+
+
+def scan_repo(repo_url: str) -> dict:
+    """Shallow-clone a remote repo into a temporary directory and scan it."""
+    report = _new_report(repo_url)
 
     with tempfile.TemporaryDirectory(prefix="slopsquat-scan-") as tmp_dir:
         try:
@@ -70,58 +153,11 @@ def scan_repo(repo_url: str) -> dict:
             report["error"] = f"clone failed: {e}"
             return report
 
-        manifest_paths = find_manifest_files(tmp_dir)
-        report["manifest_files"] = [
-            os.path.relpath(p, tmp_dir) for p in manifest_paths
-        ]
-
-        contents_by_path = {}
-        for manifest_path in manifest_paths:
-            try:
-                contents_by_path[manifest_path] = open(
-                    manifest_path, encoding="utf-8", errors="ignore"
-                ).read()
-            except OSError:
-                continue
-
-        # First pass: collect names the repo declares for itself (its own
-        # packages, e.g. every workspace member in a monorepo), so a
-        # dependency on a sibling package isn't mistaken for a phantom one.
-        local_names: set[str] = set()
-        for manifest_path, content in contents_by_path.items():
-            filename = os.path.basename(manifest_path)
-            own_name_parser = _OWN_NAME_PARSERS.get(filename)
-            if own_name_parser:
-                own_name = own_name_parser(content)
-                if own_name:
-                    local_names.add(own_name.lower())
-
-        package_cache: dict[tuple[str, str], bool] = {}
-        seen_in_repo: set[tuple[str, str]] = set()
-
-        for manifest_path, content in contents_by_path.items():
-            filename = os.path.basename(manifest_path)
-            ecosystem, parser_fn = MANIFEST_PARSERS[filename]
-            rel_path = os.path.relpath(manifest_path, tmp_dir)
-
-            for name in parser_fn(content):
-                if name.lower() in local_names:
-                    continue  # monorepo self-reference, not a registry dependency
-
-                key = (name, ecosystem)
-                seen_in_repo.add(key)
-
-                if key not in package_cache:
-                    package_cache[key] = registry_exists(name, ecosystem)
-                    time.sleep(_REGISTRY_SLEEP)
-
-                if not package_cache[key]:
-                    report["phantom_packages"].append({
-                        "name": name,
-                        "ecosystem": ecosystem,
-                        "found_in": rel_path,
-                    })
-
-        report["packages_checked"] = len(seen_in_repo)
+        _scan_directory_into(report, tmp_dir)
 
     return report
+
+
+def scan(target: str) -> dict:
+    """Scan either a remote URL or a local directory, whichever `target` is."""
+    return scan_repo(target) if looks_like_remote(target) else scan_path(target)

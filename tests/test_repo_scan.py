@@ -13,7 +13,13 @@ from pathlib import Path
 import pytest
 
 from scanner import repo_scan
-from scanner.repo_scan import find_manifest_files, scan_repo
+from scanner.repo_scan import (
+    find_manifest_files,
+    looks_like_remote,
+    scan,
+    scan_path,
+    scan_repo,
+)
 
 
 def build_tree(root, files):
@@ -186,3 +192,106 @@ class TestScanRepo:
 
         assert report["error"] is not None
         assert report["phantom_packages"] == []
+
+
+class TestTargetDetection:
+    @pytest.mark.parametrize("target", [
+        "https://github.com/org/repo",
+        "http://example.com/repo.git",
+        "git://example.com/repo.git",
+        "ssh://git@example.com/repo.git",
+        "git@github.com:org/repo.git",
+    ])
+    def test_remote_targets(self, target):
+        assert looks_like_remote(target) is True
+
+    @pytest.mark.parametrize("target", [".", "./project", "../project", "/abs/path", "project"])
+    def test_local_targets(self, target):
+        assert looks_like_remote(target) is False
+
+
+class TestScanPath:
+    """Scanning a working copy on disk -- the case that matters most, since
+    the risk lands before anything is committed or pushed."""
+
+    @pytest.fixture
+    def local_scan(self, monkeypatch):
+        def _run(tmp_path, files, available):
+            build_tree(tmp_path, files)
+            monkeypatch.setattr(
+                repo_scan, "registry_exists", lambda name, eco: name in available
+            )
+            monkeypatch.setattr(repo_scan, "_REGISTRY_SLEEP", 0)
+            return scan_path(str(tmp_path))
+
+        return _run
+
+    def test_scans_a_directory_without_cloning(self, tmp_path, local_scan, monkeypatch):
+        def fail_if_called(*args, **kwargs):
+            raise AssertionError("scan_path must not clone anything")
+
+        monkeypatch.setattr(repo_scan, "clone_repo", fail_if_called)
+
+        report = local_scan(
+            tmp_path,
+            files={"requirements.txt": "requests\ntotally-fake-pkg-xyz123\n"},
+            available={"requests"},
+        )
+
+        assert report["error"] is None
+        assert report["target"] == str(tmp_path)
+        assert [p["name"] for p in report["phantom_packages"]] == [
+            "totally-fake-pkg-xyz123"
+        ]
+
+    def test_clean_directory(self, tmp_path, local_scan):
+        report = local_scan(
+            tmp_path,
+            files={"requirements.txt": "requests\n"},
+            available={"requests"},
+        )
+
+        assert report["phantom_packages"] == []
+
+    def test_applies_the_same_monorepo_exemption_as_a_cloned_repo(
+        self, tmp_path, local_scan
+    ):
+        report = local_scan(
+            tmp_path,
+            files={
+                "package.json": json.dumps({
+                    "name": "@myorg/root",
+                    "dependencies": {"@myorg/core": "*", "express": "^4.0"},
+                }),
+                "packages/core/package.json": json.dumps({"name": "@myorg/core"}),
+            },
+            available={"express"},
+        )
+
+        assert report["phantom_packages"] == []
+
+    def test_missing_directory_is_reported_rather_than_raised(self, tmp_path):
+        report = scan_path(str(tmp_path / "does-not-exist"))
+
+        assert report["error"] is not None
+        assert report["phantom_packages"] == []
+
+    def test_a_file_is_not_a_valid_target(self, tmp_path):
+        file_path = tmp_path / "requirements.txt"
+        file_path.write_text("requests\n")
+
+        assert scan_path(str(file_path))["error"] is not None
+
+
+class TestScanDispatch:
+    def test_routes_remote_targets_to_clone(self, monkeypatch):
+        monkeypatch.setattr(repo_scan, "scan_repo", lambda t: {"routed": "remote"})
+        monkeypatch.setattr(repo_scan, "scan_path", lambda t: {"routed": "local"})
+
+        assert scan("https://github.com/org/repo") == {"routed": "remote"}
+
+    def test_routes_local_targets_to_disk(self, monkeypatch):
+        monkeypatch.setattr(repo_scan, "scan_repo", lambda t: {"routed": "remote"})
+        monkeypatch.setattr(repo_scan, "scan_path", lambda t: {"routed": "local"})
+
+        assert scan("./project") == {"routed": "local"}
