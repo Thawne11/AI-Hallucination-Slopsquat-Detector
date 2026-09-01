@@ -1,5 +1,7 @@
 # AI Hallucination -> Slopsquat Detector
 
+[![CI](https://github.com/Thawne11/AI-Hallucination-Slopsquat-Detector/actions/workflows/ci.yml/badge.svg)](https://github.com/Thawne11/AI-Hallucination-Slopsquat-Detector/actions/workflows/ci.yml)
+
 **Question:** when an LLM writes code and imports a package, does that package
 actually exist?
 
@@ -333,7 +335,7 @@ pip install -e ".[dev]"
 pytest
 ```
 
-62 tests, no network required -- the registry HTTP layer and `git clone` are
+65 tests, no network required -- the registry HTTP layer and `git clone` are
 both stubbed, so the suite is deterministic and runs in well under a second.
 
 The point of the suite is not coverage for its own sake. Four separate
@@ -363,6 +365,28 @@ Writing the suite also surfaced a real packaging bug: `registry.py` imports
 `pip install .` produced a wheel that installed fine and then crashed on
 import. Confirmed by inspecting the built wheel's contents, fixed, and
 re-confirmed.
+
+### CI
+
+`.github/workflows/ci.yml` runs on every push and pull request:
+
+- **`test`** -- the suite across Python 3.11, 3.12 and 3.13.
+- **`clean-install`** -- builds a wheel, installs it *non-editable*, then
+  imports the packaged modules and runs the `slopsquat-scan` console script
+  **from outside the repo directory**.
+
+That second job is not ceremony. Both packaging bugs this project has had
+were invisible locally for the same reason: work happened in the repo root,
+where the working directory is on `sys.path` and the failure cannot
+reproduce. A clean room is the only environment that catches them, so CI
+runs in one deliberately.
+
+The version matrix immediately earned its keep too. `requires-python` had
+claimed `>=3.10` while `scanner/manifest_parser.py` imports `tomllib`, which
+landed in 3.11 -- so the package would install on 3.10 and then fail at
+import. Floor corrected, and
+`test_requires_python_floor_covers_stdlib_modules_actually_imported` now
+pins it against the stdlib modules the packaged code really uses.
 
 ## Limitations (be upfront about these)
 
