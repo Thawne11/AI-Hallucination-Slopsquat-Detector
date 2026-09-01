@@ -6,7 +6,10 @@ build-backend = "setuptools.build_meta"
 name = "slopsquat-scan"
 version = "0.1.0"
 description = "Check a repo's declared dependencies for phantom (hallucinated) packages -- a slopsquatting supply-chain-risk scanner."
-requires-python = ">=3.10"
+# 3.11 is the real floor, not 3.10: scanner/manifest_parser.py imports
+# tomllib, which was added to the stdlib in 3.11. Pinned by
+# tests/test_packaging.py and exercised by the CI version matrix.
+requires-python = ">=3.11"
 dependencies = ["requests"]
 
 [project.optional-dependencies]

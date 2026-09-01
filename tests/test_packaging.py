@@ -11,14 +11,24 @@ sys.path, was broken.
 """
 
 import ast
+import re
 import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SETUPTOOLS_CONFIG = tomllib.loads((ROOT / "pyproject.toml").read_text())["tool"]["setuptools"]
+PYPROJECT = tomllib.loads((ROOT / "pyproject.toml").read_text())
+SETUPTOOLS_CONFIG = PYPROJECT["tool"]["setuptools"]
 
 DECLARED_MODULES = set(SETUPTOOLS_CONFIG["py-modules"])
 DECLARED_PACKAGES = set(SETUPTOOLS_CONFIG["packages"])
+
+# Stdlib modules that did not always exist, and the version that introduced
+# them. Declaring a requires-python floor below one of these produces a
+# package that installs happily and then fails at import -- the same failure
+# shape as omitting a module from py-modules.
+STDLIB_INTRODUCED_IN = {
+    "tomllib": (3, 11),
+}
 
 # Every top-level .py file in the repo root is importable as a bare module
 # name when running from the repo root, which is exactly what makes the
@@ -63,4 +73,31 @@ def test_packaged_code_only_imports_local_modules_that_are_also_packaged():
         "these local modules are imported by packaged code but are not "
         "themselves declared in pyproject.toml, so the built wheel would "
         "crash on import: " + "; ".join(missing)
+    )
+
+
+def declared_python_floor():
+    requires = PYPROJECT["project"]["requires-python"]
+    match = re.search(r">=\s*(\d+)\.(\d+)", requires)
+    assert match, f"could not read a lower bound from requires-python={requires!r}"
+    return int(match.group(1)), int(match.group(2))
+
+
+def test_requires_python_floor_covers_stdlib_modules_actually_imported():
+    floor = declared_python_floor()
+
+    too_old = []
+    for source in packaged_source_files():
+        for imported in top_level_imports(source):
+            introduced = STDLIB_INTRODUCED_IN.get(imported)
+            if introduced and floor < introduced:
+                too_old.append(
+                    f"{source.relative_to(ROOT)} imports '{imported}' "
+                    f"(needs {introduced[0]}.{introduced[1]})"
+                )
+
+    assert not too_old, (
+        f"requires-python floor is {floor[0]}.{floor[1]}, which is below what "
+        "the packaged code actually needs, so the package would install on an "
+        "interpreter it cannot run on: " + "; ".join(too_old)
     )
