@@ -19,6 +19,13 @@ GROUPS = {
 }
 
 
+def report_target(report: dict) -> str:
+    """Scan reports used to key the scanned thing as "repo_url"; it became
+    "target" when scanning gained support for local directories. The reports
+    committed from the prevalence study still use the old key."""
+    return report.get("target", report.get("repo_url", "unknown"))
+
+
 def load_group(dir_path: Path) -> list[dict]:
     if not dir_path.exists():
         return []
@@ -47,10 +54,10 @@ def summarize(reports: list[dict]) -> dict:
         "total_packages_checked": total_checked,
         "total_phantom_found": total_phantom,
         "phantom_details": [
-            {"repo": r["repo_url"], **p}
+            {"repo": report_target(r), **p}
             for r in successful for p in r["phantom_packages"]
         ],
-        "failed_repos": [{"repo": r["repo_url"], "error": r["error"]} for r in failed],
+        "failed_repos": [{"repo": report_target(r), "error": r["error"]} for r in failed],
     }
 
 
