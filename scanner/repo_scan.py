@@ -13,6 +13,8 @@ import tempfile
 import time
 
 from registry import exists as registry_exists
+from registry import fetch_metadata
+from risk import score_package
 from scanner.manifest_parser import (
     MANIFEST_PARSERS,
     parse_package_json_own_name,
@@ -72,11 +74,26 @@ def _new_report(target: str) -> dict:
         "manifest_files": [],
         "packages_checked": 0,
         "phantom_packages": [],
+        "risk": [],
         "error": None,
     }
 
 
-def _scan_directory_into(report: dict, root: str) -> None:
+def _assess(name: str, ecosystem: str, with_risk: bool):
+    """Return (exists, risk_or_None) for one package.
+
+    In risk mode the metadata fetch already reveals whether the package
+    exists, so it replaces the existence check rather than adding to it --
+    scoring costs no extra registry round-trip for the existence question.
+    """
+    if not with_risk:
+        return registry_exists(name, ecosystem), None
+
+    metadata = fetch_metadata(name, ecosystem)
+    return metadata["exists"], score_package(metadata)
+
+
+def _scan_directory_into(report: dict, root: str, with_risk: bool = False) -> None:
     manifest_paths = find_manifest_files(root)
     report["manifest_files"] = [os.path.relpath(p, root) for p in manifest_paths]
 
@@ -102,6 +119,7 @@ def _scan_directory_into(report: dict, root: str) -> None:
                 local_names.add(own_name.lower())
 
     package_cache: dict[tuple[str, str], bool] = {}
+    risk_cache: dict[tuple[str, str], dict] = {}
     seen: set[tuple[str, str]] = set()
 
     for manifest_path, content in contents_by_path.items():
@@ -117,7 +135,10 @@ def _scan_directory_into(report: dict, root: str) -> None:
             seen.add(key)
 
             if key not in package_cache:
-                package_cache[key] = registry_exists(name, ecosystem)
+                package_exists, risk = _assess(name, ecosystem, with_risk)
+                package_cache[key] = package_exists
+                if risk:
+                    risk_cache[key] = {**risk, "found_in": rel_path}
                 time.sleep(_REGISTRY_SLEEP)
 
             if not package_cache[key]:
@@ -128,9 +149,12 @@ def _scan_directory_into(report: dict, root: str) -> None:
                 })
 
     report["packages_checked"] = len(seen)
+    report["risk"] = sorted(
+        risk_cache.values(), key=lambda r: r["score"], reverse=True
+    )
 
 
-def scan_path(directory: str) -> dict:
+def scan_path(directory: str, with_risk: bool = False) -> dict:
     """Scan a directory that already exists on disk (a working copy)."""
     report = _new_report(str(directory))
 
@@ -138,11 +162,11 @@ def scan_path(directory: str) -> dict:
         report["error"] = f"not a directory: {directory}"
         return report
 
-    _scan_directory_into(report, str(directory))
+    _scan_directory_into(report, str(directory), with_risk)
     return report
 
 
-def scan_repo(repo_url: str) -> dict:
+def scan_repo(repo_url: str, with_risk: bool = False) -> dict:
     """Shallow-clone a remote repo into a temporary directory and scan it."""
     report = _new_report(repo_url)
 
@@ -153,11 +177,13 @@ def scan_repo(repo_url: str) -> dict:
             report["error"] = f"clone failed: {e}"
             return report
 
-        _scan_directory_into(report, tmp_dir)
+        _scan_directory_into(report, tmp_dir, with_risk)
 
     return report
 
 
-def scan(target: str) -> dict:
+def scan(target: str, with_risk: bool = False) -> dict:
     """Scan either a remote URL or a local directory, whichever `target` is."""
-    return scan_repo(target) if looks_like_remote(target) else scan_path(target)
+    if looks_like_remote(target):
+        return scan_repo(target, with_risk)
+    return scan_path(target, with_risk)

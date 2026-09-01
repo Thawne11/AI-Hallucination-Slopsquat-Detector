@@ -285,13 +285,13 @@ class TestScanPath:
 
 class TestScanDispatch:
     def test_routes_remote_targets_to_clone(self, monkeypatch):
-        monkeypatch.setattr(repo_scan, "scan_repo", lambda t: {"routed": "remote"})
-        monkeypatch.setattr(repo_scan, "scan_path", lambda t: {"routed": "local"})
+        monkeypatch.setattr(repo_scan, "scan_repo", lambda t, r=False: {"routed": "remote"})
+        monkeypatch.setattr(repo_scan, "scan_path", lambda t, r=False: {"routed": "local"})
 
         assert scan("https://github.com/org/repo") == {"routed": "remote"}
 
     def test_routes_local_targets_to_disk(self, monkeypatch):
-        monkeypatch.setattr(repo_scan, "scan_repo", lambda t: {"routed": "remote"})
-        monkeypatch.setattr(repo_scan, "scan_path", lambda t: {"routed": "local"})
+        monkeypatch.setattr(repo_scan, "scan_repo", lambda t, r=False: {"routed": "remote"})
+        monkeypatch.setattr(repo_scan, "scan_path", lambda t, r=False: {"routed": "local"})
 
         assert scan("./project") == {"routed": "local"}
