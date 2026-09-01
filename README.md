@@ -40,6 +40,8 @@ pip install -e .
 slopsquat-scan scan .                                  # the project you're in
 slopsquat-scan scan ./some/project                     # any local directory
 slopsquat-scan scan https://github.com/psf/requests    # a remote repo
+slopsquat-scan scan . --risk                           # + risk-score every dependency
+slopsquat-scan check loadsh --ecosystem javascript     # score one package name
 slopsquat-scan batch repos_baseline.txt --out-dir scan_results/baseline
 ```
 
@@ -47,6 +49,8 @@ slopsquat-scan batch repos_baseline.txt --out-dir scan_results/baseline
   automatically. Local paths are read in place; remote URLs are shallow-cloned
   (`--depth 1`) to a temp directory first. Prints a readable summary; pass
   `--json` for the full report, `--out FILE` to save it.
+- `check <name> [--ecosystem python|javascript]` — risk-score a single
+  package name without needing a project to scan. See "Risk scoring" below.
 - `batch <targets-file> [--out-dir DIR]` — the same, for a list of targets,
   one JSON report each.
 
@@ -71,6 +75,60 @@ Exit codes are distinct so CI can tell the failure kinds apart -- `0` clean,
 `1` phantom dependency found, `2` the scan itself failed (bad path, clone
 error). Collapsing the last two would leave a pipeline unable to
 distinguish "your dependencies are bad" from "the scanner could not run".
+
+### Risk scoring: existence is binary, danger is not
+
+A name that does **not** resolve is a loud, safe failure -- `pip install`
+errors out and you notice. The genuinely dangerous case is a name that
+**does** resolve, because an attacker already registered it. A status-code
+check calls that one "fine".
+
+`slopsquat-scan check <name>` scores a single package, and `scan --risk`
+scores every dependency in a project:
+
+```
+$ slopsquat-scan check loadsh --ecosystem javascript
+loadsh  [MEDIUM 40/100]  (javascript)
+  - 1 edit away from 'lodash'  (+30)
+  - a single maintainer  (+5)
+  - 7,701 downloads last week  (+5)
+```
+
+`loadsh` is a **real, published npm package** and a live typosquat of
+`lodash`. The existence check returns 200 for it. That is precisely the case
+the binary tool was blind to.
+
+Signals, all drawn from the registry record that `registry.py` was already
+fetching and discarding:
+
+| Signal | Why it matters |
+|---|---|
+| Typosquat distance | Transposition-aware edit distance to a very popular name |
+| Package age | Slopsquat registrations are recent by construction |
+| Release count | A lone `0.0.1` is not an established library |
+| Repository link | Real projects link to source |
+| Description | Squats are often blank or near-blank |
+| Maintainer count | npm only |
+| Weekly downloads | npm only |
+
+Three rules the engine holds to, each enforced by tests:
+
+1. **Explainable, never a bare number.** Every point carries a reason. "Risk
+   78" cannot be acted on or argued with; "3 days old, one release, no
+   repository link" can.
+2. **An unavailable signal is not a bad signal.** npm publishes free download
+   counts; PyPI does not (pypistats returns HTTP 429 on a single
+   unauthenticated call). Scoring "unknown" as "suspicious" would add points
+   to every Python package in every scan, so missing signals contribute
+   nothing and are reported as unavailable.
+3. **Triage, not proof.** A high score means a human should look, never that
+   something is malware.
+
+A non-existent package is reported as its own `PHANTOM` tier rather than
+folded into the numeric scale, because it is a different kind of problem:
+harmless today, since the install fails, but an unclaimed name that an
+attacker can register tomorrow -- at which point it silently becomes the
+dangerous case above.
 
 **Scope decision: manifest files, not full source scan.** Slopsquatting's
 real attack surface is the *declared* dependency — what `pip install -r
@@ -363,7 +421,7 @@ pip install -e ".[dev]"
 pytest
 ```
 
-93 tests, no network required -- the registry HTTP layer and `git clone` are
+145 tests, no network required -- the registry HTTP layer and `git clone` are
 both stubbed, so the suite is deterministic and runs in well under a second.
 
 The point of the suite is not coverage for its own sake. Four separate
