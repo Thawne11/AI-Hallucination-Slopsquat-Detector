@@ -1,0 +1,30 @@
+# Usage in another repo's .pre-commit-config.yaml:
+#
+#   repos:
+#     - repo: https://github.com/Thawne11/AI-Hallucination-Slopsquat-Detector
+#       rev: v0.1.0
+#       hooks:
+#         - id: slopsquat-scan
+#
+# Two hooks, because they have very different costs. The default one only
+# checks that every declared dependency resolves, which is a handful of
+# requests and fast enough to sit in front of every commit. The risk variant
+# reads each package's full registry record, so it is slower and better
+# suited to a pre-push hook or CI.
+
+- id: slopsquat-scan
+  name: slopsquat-scan (phantom dependencies)
+  description: Check declared dependencies resolve on PyPI/npm
+  entry: slopsquat-scan scan .
+  language: python
+  pass_filenames: false
+  always_run: true
+
+- id: slopsquat-scan-risk
+  name: slopsquat-scan (risk gated)
+  description: Check dependencies and fail on high-risk packages
+  entry: slopsquat-scan scan . --fail-on high
+  language: python
+  pass_filenames: false
+  always_run: true
+  stages: [pre-push]

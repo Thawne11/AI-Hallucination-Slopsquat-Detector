@@ -1,0 +1,54 @@
+name: "Slopsquat Scan"
+description: >-
+  Check a repository's declared dependencies for phantom (hallucinated)
+  packages, and optionally fail the build on high-risk ones.
+author: "Thawne11"
+
+branding:
+  icon: "shield"
+  color: "red"
+
+inputs:
+  path:
+    description: "Directory to scan, relative to the workspace."
+    required: false
+    default: "."
+  risk:
+    description: "Score each dependency for slopsquat risk (true/false)."
+    required: false
+    default: "false"
+  fail-on:
+    description: >-
+      Fail the step when any dependency scores at or above this risk tier
+      (low, medium, high, critical). Implies risk scoring. Leave empty to
+      fail only on phantom dependencies.
+    required: false
+    default: ""
+  python-version:
+    description: "Python version used to run the scanner."
+    required: false
+    default: "3.12"
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install slopsquat-scan
+      shell: bash
+      run: pip install --quiet "${{ github.action_path }}"
+
+    - name: Scan dependencies
+      shell: bash
+      run: |
+        args=(scan "${{ inputs.path }}")
+        if [ "${{ inputs.risk }}" = "true" ]; then
+          args+=(--risk)
+        fi
+        if [ -n "${{ inputs.fail-on }}" ]; then
+          args+=(--fail-on "${{ inputs.fail-on }}")
+        fi
+        echo "Running: slopsquat-scan ${args[*]}"
+        slopsquat-scan "${args[@]}"

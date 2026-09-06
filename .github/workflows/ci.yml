@@ -61,3 +61,21 @@ jobs:
       - name: Exercise the console script from outside the repo
         working-directory: /tmp
         run: slopsquat-scan --help
+
+  self-scan:
+    name: scan our own dependencies
+    runs-on: ubuntu-latest
+
+    # Dogfooding, routed through the composite action in this repo rather
+    # than a direct CLI call, so one job proves two things: that our own
+    # declared dependencies are clean, and that action.yml actually works
+    # for anyone adding `uses: Thawne11/AI-Hallucination-Slopsquat-Detector`
+    # to their workflow. An action nobody has ever run is just a YAML file.
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan this repo with its own action
+        uses: ./
+        with:
+          risk: "true"
+          fail-on: high
