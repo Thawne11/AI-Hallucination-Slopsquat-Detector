@@ -41,6 +41,27 @@ TIER_THRESHOLDS = [
     (0, "LOW"),
 ]
 
+# Severity ordering, so callers can express "fail at this tier or worse".
+# PHANTOM sits above CRITICAL deliberately: a name that resolves to nothing
+# is the one case where an install is guaranteed to either break or fetch
+# whatever an attacker registers under it later.
+TIER_ORDER = ["LOW", "MEDIUM", "HIGH", "CRITICAL", "PHANTOM"]
+
+GATEABLE_TIERS = ["low", "medium", "high", "critical"]
+
+
+def tier_rank(tier: str) -> int:
+    """Position of a tier in the severity ordering; unknown tiers rank lowest."""
+    try:
+        return TIER_ORDER.index(tier.upper())
+    except ValueError:
+        return 0
+
+
+def meets_threshold(tier: str, threshold: str) -> bool:
+    """Whether `tier` is at least as severe as `threshold`."""
+    return tier_rank(tier) >= tier_rank(threshold)
+
 
 def edit_distance(a: str, b: str) -> int:
     """Optimal string alignment (Damerau-Levenshtein) distance.

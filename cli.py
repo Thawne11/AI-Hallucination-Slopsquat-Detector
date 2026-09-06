@@ -9,7 +9,8 @@ Works on a working copy on disk or on a remote repo:
     slopsquat-scan scan https://github.com/org/repo
 
 Exit codes are distinct so CI can tell the two failure kinds apart:
-0 clean, 1 phantom dependency found, 2 the scan itself failed.
+0 clean, 1 finding (phantom dependency, or risk at or above --fail-on),
+2 the scan itself failed.
 """
 
 import argparse
@@ -19,11 +20,14 @@ import sys
 from pathlib import Path
 
 from registry import fetch_metadata
-from risk import score_package
+from risk import GATEABLE_TIERS, meets_threshold, score_package
 from scanner.repo_scan import looks_like_remote, scan
 
 EXIT_CLEAN = 0
-EXIT_PHANTOM_FOUND = 1
+# One code for "the scan found something you should act on". That covers a
+# phantom dependency and, when --fail-on is set, a package at or above the
+# given risk tier -- both are findings, as opposed to the scanner failing.
+EXIT_FINDING = 1
 EXIT_SCAN_ERROR = 2
 
 # Risk at or above this is worth surfacing in the summary. Below it, a package
@@ -110,10 +114,23 @@ def format_risk_section(report: dict) -> str:
     return "\n".join(lines)
 
 
-def exit_code_for(report: dict) -> int:
+def risk_failures(report: dict, fail_on: str | None) -> list[dict]:
+    """Risk entries at or above the --fail-on tier, worst first."""
+    if not fail_on:
+        return []
+    failing = [
+        entry for entry in report.get("risk", [])
+        if meets_threshold(entry["tier"], fail_on)
+    ]
+    return sorted(failing, key=lambda e: e["score"], reverse=True)
+
+
+def exit_code_for(report: dict, fail_on: str | None = None) -> int:
     if report["error"]:
         return EXIT_SCAN_ERROR
-    return EXIT_PHANTOM_FOUND if report["phantom_packages"] else EXIT_CLEAN
+    if report["phantom_packages"]:
+        return EXIT_FINDING
+    return EXIT_FINDING if risk_failures(report, fail_on) else EXIT_CLEAN
 
 
 def cmd_check(args):
@@ -126,26 +143,40 @@ def cmd_check(args):
     else:
         print(format_risk_entry(entry, indent=""))
 
+    if args.fail_on:
+        return EXIT_FINDING if meets_threshold(entry["tier"], args.fail_on) else EXIT_CLEAN
+
     if not entry["exists"]:
-        return EXIT_PHANTOM_FOUND
-    return EXIT_PHANTOM_FOUND if entry["score"] >= RISK_REPORTING_THRESHOLD else EXIT_CLEAN
+        return EXIT_FINDING
+    return EXIT_FINDING if entry["score"] >= RISK_REPORTING_THRESHOLD else EXIT_CLEAN
 
 
 def cmd_scan(args):
-    report = scan(args.target, with_risk=args.risk)
+    # --fail-on is meaningless without the scores it gates on, so asking to
+    # gate implies asking to score.
+    with_risk = args.risk or bool(args.fail_on)
+    report = scan(args.target, with_risk=with_risk)
 
     if args.json:
         print(json.dumps(report, indent=2))
     else:
         print(format_report(report))
-        if args.risk:
+        if with_risk:
             print(format_risk_section(report))
+            failures = risk_failures(report, args.fail_on)
+            if failures:
+                worst = failures[0]
+                print(
+                    f"\nFailing: {len(failures)} package(s) at or above "
+                    f"{args.fail_on.upper()} (worst: {worst['name']} "
+                    f"{worst['tier']} {worst['score']}/100)."
+                )
 
     if args.out:
         Path(args.out).write_text(json.dumps(report, indent=2))
         print(f"\nWrote {args.out}", file=sys.stderr)
 
-    return exit_code_for(report)
+    return exit_code_for(report, args.fail_on)
 
 
 def cmd_batch(args):
@@ -207,6 +238,13 @@ def main():
             "full registry record."
         ),
     )
+    scan_parser.add_argument(
+        "--fail-on", choices=GATEABLE_TIERS, metavar="TIER",
+        help=(
+            "Exit non-zero if any dependency scores at or above this risk "
+            f"tier ({', '.join(GATEABLE_TIERS)}). Implies --risk."
+        ),
+    )
     scan_parser.add_argument("--out", help="Also write the JSON report to this path")
     scan_parser.set_defaults(func=cmd_scan)
 
@@ -220,6 +258,13 @@ def main():
     )
     check_parser.add_argument(
         "--json", action="store_true", help="Print the full JSON verdict"
+    )
+    check_parser.add_argument(
+        "--fail-on", choices=GATEABLE_TIERS, metavar="TIER",
+        help=(
+            "Exit non-zero only if the package scores at or above this tier "
+            f"({', '.join(GATEABLE_TIERS)})."
+        ),
     )
     check_parser.set_defaults(func=cmd_check)
 
