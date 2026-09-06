@@ -72,9 +72,33 @@ Dependencies checked:  5
 ```
 
 Exit codes are distinct so CI can tell the failure kinds apart -- `0` clean,
-`1` phantom dependency found, `2` the scan itself failed (bad path, clone
-error). Collapsing the last two would leave a pipeline unable to
-distinguish "your dependencies are bad" from "the scanner could not run".
+`1` a finding, `2` the scan itself failed (bad path, clone error).
+Collapsing the last two would leave a pipeline unable to distinguish "your
+dependencies are bad" from "the scanner could not run".
+
+### Gating a build on risk
+
+A phantom dependency always counts as a finding. Risk scores do not, unless
+you ask them to:
+
+```bash
+slopsquat-scan scan . --fail-on high      # exit 1 if anything scores HIGH or worse
+slopsquat-scan check some-pkg --fail-on medium
+```
+
+`--fail-on` takes `low`, `medium`, `high` or `critical`, and implies
+`--risk`. Without it the risk section stays informational, so adding
+scoring to an existing pipeline can't start failing it out from under you.
+
+This was a genuine hole rather than a missing nicety. `scan --risk` would
+report a package as HIGH or CRITICAL and still exit `0` -- meaning the
+scoring engine, whose entire purpose is to flag packages that *do* exist and
+are still dangerous, could not stop a single build. Distinct exit codes had
+been added specifically so CI could gate on findings, and then a whole
+finding category was added that bypassed them.
+
+Phantom sits above `critical` in the ordering, so even `--fail-on critical`
+cannot wave a nonexistent package through.
 
 ### Risk scoring: existence is binary, danger is not
 
@@ -129,6 +153,40 @@ folded into the numeric scale, because it is a different kind of problem:
 harmless today, since the install fails, but an unclaimed name that an
 attacker can register tomorrow -- at which point it silently becomes the
 dangerous case above.
+
+### Using it in your own project
+
+**As a pre-commit hook** — add to `.pre-commit-config.yaml`:
+
+```yaml
+repos:
+  - repo: https://github.com/Thawne11/AI-Hallucination-Slopsquat-Detector
+    rev: master        # pin to a release tag once one is cut
+    hooks:
+      - id: slopsquat-scan          # every dependency resolves (fast)
+      - id: slopsquat-scan-risk     # + fails on high-risk (pre-push stage)
+```
+
+Two hooks because they cost very differently. The default only checks that
+declared dependencies resolve -- a handful of requests, fast enough to sit
+in front of every commit. The risk variant reads each package's full
+registry record, so it's scoped to `pre-push`.
+
+**As a GitHub Action** — add a step:
+
+```yaml
+- uses: Thawne11/AI-Hallucination-Slopsquat-Detector@master
+  with:
+    risk: "true"
+    fail-on: high
+```
+
+Inputs: `path` (default `.`), `risk`, `fail-on`, `python-version`.
+
+This repo's own CI runs that action against this repo (the `self-scan` job),
+so one job proves both that our declared dependencies are clean and that the
+action actually works for anyone else. An action nobody has ever run is just
+a YAML file.
 
 **Scope decision: manifest files, not full source scan.** Slopsquatting's
 real attack surface is the *declared* dependency — what `pip install -r
@@ -421,7 +479,7 @@ pip install -e ".[dev]"
 pytest
 ```
 
-145 tests, no network required -- the registry HTTP layer and `git clone` are
+162 tests, no network required -- the registry HTTP layer and `git clone` are
 both stubbed, so the suite is deterministic and runs in well under a second.
 
 The point of the suite is not coverage for its own sake. Four separate
@@ -460,8 +518,11 @@ re-confirmed.
 - **`clean-install`** -- builds a wheel, installs it *non-editable*, then
   imports the packaged modules and runs the `slopsquat-scan` console script
   **from outside the repo directory**.
+- **`self-scan`** -- runs this repo's own GitHub Action against this repo,
+  with `--fail-on high`. One job, two guarantees: our declared dependencies
+  are clean, and `action.yml` actually works for anyone else who adds it.
 
-That second job is not ceremony. Both packaging bugs this project has had
+The `clean-install` job is not ceremony. Both packaging bugs this project has had
 were invisible locally for the same reason: work happened in the repo root,
 where the working directory is on `sys.path` and the failure cannot
 reproduce. A clean room is the only environment that catches them, so CI
