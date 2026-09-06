@@ -51,6 +51,8 @@ def format_report(report: dict) -> str:
     lines = [
         f"Target:                {report['target']}",
         f"Manifests found:       {len(report['manifest_files'])}",
+        *([f"Source files scanned:  {report['source_files']}"]
+          if report.get("source_files") else []),
         f"Dependencies checked:  {report['packages_checked']}",
         "",
     ]
@@ -63,9 +65,12 @@ def format_report(report: dict) -> str:
     lines.append(f"{len(phantoms)} phantom {noun}:")
     width = max(len(p["name"]) for p in phantoms)
     for phantom in phantoms:
+        # An imported-but-undeclared name is the earlier, more urgent signal:
+        # it is what a fresh paste of AI-generated code looks like.
+        origin = "" if phantom.get("origin", "manifest") == "manifest" else "  [imported, not declared]"
         lines.append(
             f"  {phantom['name']:<{width}}  ({phantom['ecosystem']})  "
-            f"{phantom['found_in']}"
+            f"{phantom['found_in']}{origin}"
         )
     lines.append("")
     lines.append(
@@ -155,7 +160,8 @@ def cmd_scan(args):
     # --fail-on is meaningless without the scores it gates on, so asking to
     # gate implies asking to score.
     with_risk = args.risk or bool(args.fail_on)
-    report = scan(args.target, with_risk=with_risk)
+    report = scan(args.target, with_risk=with_risk,
+                  include_imports=args.include_imports)
 
     if args.json:
         print(json.dumps(report, indent=2))
@@ -236,6 +242,14 @@ def main():
             "Also score each dependency for slopsquat risk (age, downloads, "
             "repository, typosquat proximity). Slower: it reads each package's "
             "full registry record."
+        ),
+    )
+    scan_parser.add_argument(
+        "--include-imports", action="store_true",
+        help=(
+            "Also check packages imported in source files, not just those "
+            "declared in a manifest. Catches a hallucinated import before "
+            "anyone adds it to requirements.txt."
         ),
     )
     scan_parser.add_argument(

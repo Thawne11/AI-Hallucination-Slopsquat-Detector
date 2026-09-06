@@ -40,6 +40,7 @@ pip install -e .
 slopsquat-scan scan .                                  # the project you're in
 slopsquat-scan scan ./some/project                     # any local directory
 slopsquat-scan scan https://github.com/psf/requests    # a remote repo
+slopsquat-scan scan . --include-imports                # + names imported in source
 slopsquat-scan scan . --risk                           # + risk-score every dependency
 slopsquat-scan check loadsh --ecosystem javascript     # score one package name
 slopsquat-scan batch repos_baseline.txt --out-dir scan_results/baseline
@@ -188,15 +189,71 @@ so one job proves both that our declared dependencies are clean and that the
 action actually works for anyone else. An action nobody has ever run is just
 a YAML file.
 
-**Scope decision: manifest files, not full source scan.** Slopsquatting's
-real attack surface is the *declared* dependency — what `pip install -r
-requirements.txt` or `npm install` actually pulls down — not every import
-statement buried in source. So the scanner parses:
+**What gets read.** By default, manifest files only:
 - Python: `requirements.txt`, `pyproject.toml` (PEP 621 `[project]` and
   Poetry `[tool.poetry]`), `setup.py` (`install_requires=[...]`)
 - JS/Node: `package.json` (`dependencies` + `devDependencies`)
 
+With `--include-imports`, also every `import` / `require` in source
+(`.py`, `.js`, `.mjs`, `.cjs`, `.jsx`, `.ts`, `.tsx`).
+
 See `scanner/manifest_parser.py` and `scanner/repo_scan.py`.
+
+### `--include-imports`: catching it before it reaches a manifest
+
+Manifest-only scanning has a blind spot, and it sits exactly where this
+project claims to be useful. A working copy right after AI-generated code
+was pasted in:
+
+```
+$ cat main.py
+import requests
+import auto_retry_httpx
+from ws_reconnect_pro import Client
+
+$ slopsquat-scan scan .
+Dependencies checked:  1
+No phantom dependencies found.          # ← both invented names invisible
+```
+
+Nothing is wrong with the manifest, because neither name has reached it
+yet. That comes later, if it comes at all.
+
+```
+$ slopsquat-scan scan . --include-imports
+Manifests found:       1
+Source files scanned:  3
+Dependencies checked:  3
+
+2 phantom dependencies:
+  auto_retry_httpx  (python)  main.py  [imported, not declared]
+  ws_reconnect_pro  (python)  main.py  [imported, not declared]
+```
+
+Findings carry an `origin` of `manifest` or `import`, because they aren't
+equivalent: something declared in a manifest is on its way to being
+installed, while an imported-but-undeclared name is the earlier and more
+urgent signal — it's what a fresh paste looks like before anyone has run
+`pip install`.
+
+**Why this was a scope change, not a missing feature.** The original
+decision was "manifest files, not full source scan," reasoning that the
+declared dependency is what actually gets installed. That was correct *for
+a tool that could only scan published repos* — in published code, anything
+genuinely in use has usually reached a manifest. Local directory scanning
+changed that premise, and the reasoning quietly went stale rather than ever
+being wrong.
+
+**Why it's opt-in.** Source imports are noisier than manifests, so the
+high-precision default is left alone and this adds recall. The thing that
+makes it usable at all is local-module suppression: Python resolves a bare
+`import helpers` against the local directory, so a module the project
+defines for itself isn't a registry dependency. Without that, the feature
+would flag every internal module in the codebase. It's applied to Python
+only and deliberately so — Node doesn't resolve bare specifiers locally, a
+local file has to be required as `./foo`, so a same-named file there must
+*not* suppress a genuine package reference. Both directions are pinned by
+tests.
 
 ### Two false-positive sources found and fixed while building this
 
@@ -479,7 +536,7 @@ pip install -e ".[dev]"
 pytest
 ```
 
-162 tests, no network required -- the registry HTTP layer and `git clone` are
+175 tests, no network required -- the registry HTTP layer and `git clone` are
 both stubbed, so the suite is deterministic and runs in well under a second.
 
 The point of the suite is not coverage for its own sake. Four separate
