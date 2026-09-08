@@ -13,6 +13,7 @@ import tempfile
 import time
 
 from extractor import extract_packages
+from import_resolver import VERIFIED, default_resolver
 from registry import exists as registry_exists
 from registry import fetch_metadata
 from risk import score_package
@@ -122,6 +123,10 @@ def _new_report(target: str) -> dict:
         "source_files": 0,
         "packages_checked": 0,
         "phantom_packages": [],
+        # Imports that could not be reconciled to a distribution. Kept
+        # apart from phantom_packages on purpose: "we could not map
+        # this" is a weaker claim than "this does not exist".
+        "unresolved_imports": [],
         "risk": [],
         "error": None,
     }
@@ -177,18 +182,34 @@ def _manifest_candidates(root: str, report: dict) -> list[tuple[str, str, str, s
         for name in parser_fn(content):
             if name.lower() in declared_names:
                 continue  # monorepo self-reference, not a registry dependency
-            candidates.append((name, ecosystem, rel_path, "manifest"))
+            candidates.append((name, ecosystem, rel_path, "manifest", None))
     return candidates
 
 
-def _import_candidates(root: str, report: dict) -> list[tuple[str, str, str, str]]:
-    """(name, ecosystem, rel_path, origin) for every third-party import."""
+def _import_candidates(root: str, report: dict, resolver=None) -> list[tuple]:
+    """(name, ecosystem, rel_path, origin, resolution) for third-party imports.
+
+    Python import names are reconciled to distribution names first, because
+    they are different namespaces: `import cv2` installs as `opencv-python`.
+    Checking the import name against PyPI asks the wrong question.
+
+    Imports that cannot be reconciled are diverted into the report's
+    `unresolved_imports` rather than being called phantom. Failing to map a
+    name is not evidence that no distribution provides it.
+
+    JavaScript is passed through untouched: npm has no module/distribution
+    split, so an import specifier there already is the package name.
+    """
     source_files = find_source_files(root)
     report["source_files"] = len(source_files)
 
     local_modules = local_python_modules(root)
+    if resolver is None:
+        resolver = default_resolver()
 
     candidates = []
+    seen_unresolved: set[str] = set()
+
     for source_path, ecosystem in source_files:
         content = _read(source_path)
         if content is None:
@@ -196,26 +217,45 @@ def _import_candidates(root: str, report: dict) -> list[tuple[str, str, str, str
 
         rel_path = os.path.relpath(source_path, root)
         for name in extract_packages(content, ecosystem):
-            if ecosystem == "python" and name.lower() in local_modules:
+            if ecosystem != "python":
+                candidates.append((name, ecosystem, rel_path, "import", None))
+                continue
+
+            if name.lower() in local_modules:
                 continue  # resolves to a module inside the project itself
-            candidates.append((name, ecosystem, rel_path, "import"))
+
+            resolution = resolver.resolve(name)
+            if resolution["resolution_status"] == VERIFIED:
+                candidates.append((
+                    resolution["distribution_name"], ecosystem, rel_path,
+                    "import", resolution,
+                ))
+            elif name not in seen_unresolved:
+                seen_unresolved.add(name)
+                report["unresolved_imports"].append({
+                    "name": name,
+                    "ecosystem": ecosystem,
+                    "found_in": rel_path,
+                    "origin": "import",
+                    "resolution": resolution,
+                })
     return candidates
 
 
 def _scan_directory_into(
     report: dict, root: str, with_risk: bool = False,
-    include_imports: bool = False,
+    include_imports: bool = False, resolver=None,
 ) -> None:
     candidates = _manifest_candidates(root, report)
     if include_imports:
-        candidates += _import_candidates(root, report)
+        candidates += _import_candidates(root, report, resolver)
 
     package_cache: dict[tuple[str, str], bool] = {}
     risk_cache: dict[tuple[str, str], dict] = {}
     reported: set[tuple[str, str, str]] = set()
     seen: set[tuple[str, str]] = set()
 
-    for name, ecosystem, rel_path, origin in candidates:
+    for name, ecosystem, rel_path, origin, resolution in candidates:
         key = (name, ecosystem)
         seen.add(key)
 
@@ -223,7 +263,10 @@ def _scan_directory_into(
             package_exists, risk = _assess(name, ecosystem, with_risk)
             package_cache[key] = package_exists
             if risk:
-                risk_cache[key] = {**risk, "found_in": rel_path, "origin": origin}
+                risk_cache[key] = {
+                    **risk, "found_in": rel_path, "origin": origin,
+                    **({"resolution": resolution} if resolution else {}),
+                }
             time.sleep(_REGISTRY_SLEEP)
 
         # A name imported from several files is one finding, not several.
@@ -234,6 +277,7 @@ def _scan_directory_into(
                 "ecosystem": ecosystem,
                 "found_in": rel_path,
                 "origin": origin,
+                **({"resolution": resolution} if resolution else {}),
             })
 
     report["packages_checked"] = len(seen)
@@ -243,7 +287,7 @@ def _scan_directory_into(
 
 
 def scan_path(directory: str, with_risk: bool = False,
-              include_imports: bool = False) -> dict:
+              include_imports: bool = False, resolver=None) -> dict:
     """Scan a directory that already exists on disk (a working copy)."""
     report = _new_report(str(directory))
 
@@ -251,12 +295,13 @@ def scan_path(directory: str, with_risk: bool = False,
         report["error"] = f"not a directory: {directory}"
         return report
 
-    _scan_directory_into(report, str(directory), with_risk, include_imports)
+    _scan_directory_into(report, str(directory), with_risk, include_imports,
+                         resolver)
     return report
 
 
 def scan_repo(repo_url: str, with_risk: bool = False,
-              include_imports: bool = False) -> dict:
+              include_imports: bool = False, resolver=None) -> dict:
     """Shallow-clone a remote repo into a temporary directory and scan it."""
     report = _new_report(repo_url)
 
@@ -267,14 +312,15 @@ def scan_repo(repo_url: str, with_risk: bool = False,
             report["error"] = f"clone failed: {e}"
             return report
 
-        _scan_directory_into(report, tmp_dir, with_risk, include_imports)
+        _scan_directory_into(report, tmp_dir, with_risk, include_imports,
+                             resolver)
 
     return report
 
 
 def scan(target: str, with_risk: bool = False,
-         include_imports: bool = False) -> dict:
+         include_imports: bool = False, resolver=None) -> dict:
     """Scan either a remote URL or a local directory, whichever `target` is."""
     if looks_like_remote(target):
-        return scan_repo(target, with_risk, include_imports)
-    return scan_path(target, with_risk, include_imports)
+        return scan_repo(target, with_risk, include_imports, resolver)
+    return scan_path(target, with_risk, include_imports, resolver)

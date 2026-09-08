@@ -10,6 +10,7 @@ import json
 
 import pytest
 
+from import_resolver import ImportNameResolver
 from scanner import repo_scan
 from scanner.repo_scan import (
     find_source_files,
@@ -21,13 +22,21 @@ from tests.test_repo_scan import build_tree
 
 @pytest.fixture
 def import_scan(monkeypatch):
-    def _run(tmp_path, files, available, include_imports=True):
+    def _run(tmp_path, files, available, include_imports=True, resolver=None):
         build_tree(tmp_path, files)
         monkeypatch.setattr(
             repo_scan, "registry_exists", lambda name, eco: name in available
         )
         monkeypatch.setattr(repo_scan, "_REGISTRY_SLEEP", 0)
-        return scan_path(str(tmp_path), include_imports=include_imports)
+        if resolver is None:
+            # use_environment=False keeps the result independent of whatever
+            # happens to be pip-installed in the venv running the tests.
+            resolver = ImportNameResolver(
+                exists_probe=lambda name: name in available,
+                use_environment=False,
+            )
+        return scan_path(str(tmp_path), include_imports=include_imports,
+                         resolver=resolver)
 
     return _run
 
@@ -75,7 +84,11 @@ class TestImportScanning:
         self, tmp_path, import_scan
     ):
         """REGRESSION: this project reported clean before --include-imports
-        existed, which is the exact scenario the tool is for."""
+        existed, which is the exact scenario the tool is for.
+
+        Since import/distribution reconciliation landed, an unmappable
+        import surfaces as an unresolved import rather than a phantom
+        package -- still a finding, but an honest one."""
         report = import_scan(
             tmp_path,
             files={
@@ -85,8 +98,10 @@ class TestImportScanning:
             available={"requests"},
         )
 
-        assert [p["name"] for p in report["phantom_packages"]] == ["auto_retry_httpx"]
-        assert report["phantom_packages"][0]["origin"] == "import"
+        assert report["phantom_packages"] == []
+        assert [u["name"] for u in report["unresolved_imports"]] == ["auto_retry_httpx"]
+        assert report["unresolved_imports"][0]["origin"] == "import"
+        assert report["unresolved_imports"][0]["resolution"]["registry_checked"] is True
 
     def test_imports_are_not_scanned_unless_asked(self, tmp_path, import_scan):
         """Opt-in, so turning this on cannot silently change an existing
@@ -144,7 +159,7 @@ class TestImportScanning:
             available=set(),
         )
 
-        assert len(report["phantom_packages"]) == 1
+        assert len(report["unresolved_imports"]) == 1
 
     def test_javascript_imports_are_checked_too(self, tmp_path, import_scan):
         report = import_scan(

@@ -24,6 +24,21 @@ def exists_on_pypi(package: str) -> bool:
     return False
 
 
+def distribution_exists(name: str) -> bool | None:
+    """Whether a PyPI distribution of exactly this name exists.
+
+    Differs from `exists_on_pypi` in two ways that matter to the import
+    resolver: it applies no alias fallback (the resolver owns that logic
+    now, and a probe that quietly answers about a different name is
+    useless), and it returns None rather than False when the registry could
+    not be reached -- so an offline run is never mistaken for a discovery.
+    """
+    try:
+        return _pypi_status(name) == 200
+    except requests.RequestException:
+        return None
+
+
 def exists_on_npm(package: str) -> bool:
     resp = _SESSION.get(f"https://registry.npmjs.org/{package}", timeout=_TIMEOUT)
     return resp.status_code == 200
