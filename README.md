@@ -42,6 +42,7 @@ slopsquat-scan scan ./some/project                     # any local directory
 slopsquat-scan scan https://github.com/psf/requests    # a remote repo
 slopsquat-scan scan . --include-imports                # + names imported in source
 slopsquat-scan scan . --risk                           # + risk-score every dependency
+slopsquat-scan check loadsh --ecosystem javascript --explain   # + evidence behind the score
 slopsquat-scan check loadsh --ecosystem javascript     # score one package name
 slopsquat-scan resolve cv2 sklearn                     # what do these actually install?
 slopsquat-scan batch repos_baseline.txt --out-dir scan_results/baseline
@@ -157,6 +158,92 @@ folded into the numeric scale, because it is a different kind of problem:
 harmless today, since the install fails, but an unclaimed name that an
 attacker can register tomorrow -- at which point it silently becomes the
 dangerous case above.
+
+### Explainable risk assessment: score, factors, confidence
+
+Every risk verdict answers two separate questions.
+
+**Risk** — how suspicious does this package look? **Confidence** — how much
+evidence is that judgement standing on? They are independent, and the
+independence is the point:
+
+```
+$ slopsquat-scan check requests
+requests  [LOW 0/100]  (python)  confidence 70%
+  - not scored, unavailable for this registry: maintainers, downloads
+
+$ slopsquat-scan check loadsh --ecosystem javascript
+loadsh  [MEDIUM 40/100]  (javascript)  confidence 100%
+  +30  1 edit away from 'lodash'
+  +5   a single maintainer
+  +5   5,410 downloads last week
+      --------------------
+  40  total
+```
+
+`requests` is the *safer* package and carries the *lower* confidence — PyPI
+publishes no free download counts or usable maintainer data, so there is
+genuinely less to go on. A single number could not have told you that.
+
+Every point carries the reason the scoring engine used to award it; the
+factors are the engine's own output, not a narration written afterwards.
+The totals reconcile with the score, and where the 100-point cap bites, the
+breakdown says `(capped from 120)` rather than printing a total that
+silently disagrees with the lines above it.
+
+`--explain` adds the evidence behind the confidence figure:
+
+```
+$ slopsquat-scan check loadsh --ecosystem javascript --explain
+...
+Evidence quality (100%):
+  + registry answered  (40 pts)
+  + release history available  (15 pts)
+  + download statistics available  (15 pts)
+  + maintainer information available  (15 pts)
+  + repository link present  (10 pts)
+  + description present  (5 pts)
+```
+
+**Confidence is evidence completeness, not probability of correctness.**
+There is no calibration data behind this tool, so a number implying "93%
+chance this verdict is right" would be an unearned claim. The weights sum
+to 100, the calculation is a sum, and it is documented in `risk.py`.
+
+Identity uncertainty is subtracted separately: if a package was reached
+through a source import whose distribution could not be pinned down
+(`unresolved` or `ambiguous`), confidence drops, because the doubt is about
+*which* package is being judged rather than about the package itself. That
+never raises the risk score — not knowing what something is isn't evidence
+that it's bad.
+
+#### PHANTOM, and the outage that used to look like one
+
+A definitive "no such package" scores **95%** confidence: the one piece of
+evidence that matters is present. Not 100 — registries go briefly
+inconsistent, and an unclaimed name can be registered a minute after the
+check.
+
+A registry that *could not be reached* is a different outcome entirely:
+
+```
+2 unverified packages (registry unreachable):
+  requests  (python)  requirements.txt
+  flask     (python)  requirements.txt
+
+Existence could not be checked -- this is not a finding about these
+packages, and the scan is incomplete.
+```
+
+Tier `UNVERIFIED`, confidence 0, **exit 2** (scan incomplete), and never
+`PHANTOM`. `UNVERIFIED` also sits outside the severity scale entirely, so no
+`--fail-on` threshold can be satisfied by it — including `--fail-on low`.
+
+This mattered more than it sounds. Before this change every registry call
+was unguarded, so an outage raised an unhandled exception — and Python exits
+1 on an unhandled exception, which is this tool's *finding* code. A DNS blip
+was indistinguishable from "your dependencies are bad", which is precisely
+what the separate exit-2 code exists to prevent.
 
 ### Using it in your own project
 
@@ -654,7 +741,7 @@ pip install -e ".[dev]"
 pytest
 ```
 
-259 tests, no network required -- the registry HTTP layer and `git clone` are
+297 tests, no network required -- the registry HTTP layer and `git clone` are
 both stubbed, so the suite is deterministic and runs in well under a second.
 
 The point of the suite is not coverage for its own sake. Four separate
