@@ -66,7 +66,11 @@ class TestPyPI:
         assert session.requested_names == ["totally-fake-pkg-xyz123"]
 
     @pytest.mark.parametrize(
-        "import_name,distribution_name", sorted(KNOWN_PYTHON_ALIASES.items())
+        "import_name,distribution_name",
+        # Identity entries (`requests` -> `requests`) resolve on the first
+        # lookup, so there is no alias fallback for this test to observe.
+        # They are covered by the resolver's own tests instead.
+        sorted((i, d) for i, d in KNOWN_PYTHON_ALIASES.items() if i != d),
     )
     def test_regression_import_name_resolves_via_distribution_name(
         self, fake_registry, import_name, distribution_name
