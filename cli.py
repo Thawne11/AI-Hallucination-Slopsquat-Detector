@@ -19,6 +19,7 @@ import os
 import sys
 from pathlib import Path
 
+from import_resolver import AMBIGUOUS, UNRESOLVED, default_resolver
 from registry import fetch_metadata
 from risk import GATEABLE_TIERS, meets_threshold, score_package
 from scanner.repo_scan import looks_like_remote, scan
@@ -68,6 +69,9 @@ def format_report(report: dict) -> str:
         # An imported-but-undeclared name is the earlier, more urgent signal:
         # it is what a fresh paste of AI-generated code looks like.
         origin = "" if phantom.get("origin", "manifest") == "manifest" else "  [imported, not declared]"
+        resolution = phantom.get("resolution")
+        if resolution and resolution["import_name"] != phantom["name"]:
+            origin += f"  [import: {resolution['import_name']}]"
         lines.append(
             f"  {phantom['name']:<{width}}  ({phantom['ecosystem']})  "
             f"{phantom['found_in']}{origin}"
@@ -78,6 +82,76 @@ def format_report(report: dict) -> str:
         "installing -- a name an LLM invented is exactly what a slopsquatting "
         "attacker registers."
     )
+    return "\n".join(lines)
+
+
+def format_unresolved_section(report: dict) -> str:
+    """Imports we could not tie to a distribution.
+
+    Deliberately worded as an open question rather than an accusation. The
+    scanner knows it failed to map the name; it does not know that nothing
+    provides it.
+    """
+    unresolved = report.get("unresolved_imports", [])
+    if not unresolved:
+        return ""
+
+    noun = "import" if len(unresolved) == 1 else "imports"
+    lines = ["", f"{len(unresolved)} unresolved {noun}:"]
+    width = max(len(u["name"]) for u in unresolved)
+    for item in unresolved:
+        resolution = item["resolution"]
+        lines.append(
+            f"  {item['name']:<{width}}  ({item['ecosystem']})  {item['found_in']}"
+        )
+        if resolution["resolution_status"] == AMBIGUOUS:
+            lines.append(
+                f"  {'':<{width}}  ambiguous -- could be: "
+                + ", ".join(resolution["candidates"])
+            )
+        elif resolution["registry_checked"]:
+            lines.append(
+                f"  {'':<{width}}  no distribution of that name on the registry either"
+            )
+        else:
+            lines.append(
+                f"  {'':<{width}}  registry could not be consulted"
+            )
+    lines.append("")
+    lines.append(
+        "Not classified as phantom: failing to map an import is not proof "
+        "that no distribution provides it. Verify each before installing."
+    )
+    return "\n".join(lines)
+
+
+def format_resolution(resolution: dict) -> str:
+    """The `resolve` command's view of one import name."""
+    status = resolution["resolution_status"].upper()
+    lines = [f"IMPORT:       {resolution['import_name']}"]
+
+    if status == AMBIGUOUS.upper():
+        lines.append("DISTRIBUTION: AMBIGUOUS")
+        lines.append(f"RESOLUTION:   {status}")
+        lines.append("CANDIDATES:")
+        lines.extend(f"  - {c}" for c in resolution["candidates"])
+        lines.append("")
+        lines.append("Manual verification required -- more than one "
+                     "distribution provides this module.")
+        return "\n".join(lines)
+
+    if status == UNRESOLVED.upper():
+        lines.append("DISTRIBUTION: UNKNOWN")
+        lines.append(f"RESOLUTION:   {status}")
+        lines.append("")
+        lines.append("Cannot reliably map this import to a distribution. "
+                     "This is NOT automatically classified as PHANTOM.")
+        return "\n".join(lines)
+
+    lines.append(f"DISTRIBUTION: {resolution['distribution_name']}")
+    lines.append(f"RESOLUTION:   {status}")
+    lines.append(f"CONFIDENCE:   {resolution['resolution_confidence']:.0%}")
+    lines.append(f"SOURCE:       {resolution['resolution_source']}")
     return "\n".join(lines)
 
 
@@ -135,6 +209,11 @@ def exit_code_for(report: dict, fail_on: str | None = None) -> int:
         return EXIT_SCAN_ERROR
     if report["phantom_packages"]:
         return EXIT_FINDING
+    # An unresolved import is a weaker claim than a phantom package, but it
+    # is still something a human has to look at -- an invented import name
+    # lands here, so letting it exit 0 would gut the check.
+    if report.get("unresolved_imports"):
+        return EXIT_FINDING
     return EXIT_FINDING if risk_failures(report, fail_on) else EXIT_CLEAN
 
 
@@ -156,6 +235,25 @@ def cmd_check(args):
     return EXIT_FINDING if entry["score"] >= RISK_REPORTING_THRESHOLD else EXIT_CLEAN
 
 
+def cmd_resolve(args):
+    """Show what an import name would actually install, and why.
+
+    Useful on its own, but mostly it makes the reconciliation layer
+    inspectable: if the scanner reaches a surprising verdict, this shows
+    which layer produced the mapping.
+    """
+    resolver = default_resolver()
+    results = [resolver.resolve(name) for name in args.imports]
+
+    if args.json:
+        print(json.dumps(results if len(results) > 1 else results[0], indent=2))
+    else:
+        print("\n\n".join(format_resolution(r) for r in results))
+
+    unresolved = [r for r in results if r["resolution_status"] != "verified"]
+    return EXIT_FINDING if unresolved else EXIT_CLEAN
+
+
 def cmd_scan(args):
     # --fail-on is meaningless without the scores it gates on, so asking to
     # gate implies asking to score.
@@ -167,6 +265,9 @@ def cmd_scan(args):
         print(json.dumps(report, indent=2))
     else:
         print(format_report(report))
+        unresolved = format_unresolved_section(report)
+        if unresolved:
+            print(unresolved)
         if with_risk:
             print(format_risk_section(report))
             failures = risk_failures(report, args.fail_on)
@@ -281,6 +382,19 @@ def main():
         ),
     )
     check_parser.set_defaults(func=cmd_check)
+
+    resolve_parser = subparsers.add_parser(
+        "resolve",
+        help="Show which distribution a Python import name comes from",
+    )
+    resolve_parser.add_argument(
+        "imports", nargs="+", metavar="IMPORT",
+        help="one or more import names, e.g. cv2 sklearn yaml",
+    )
+    resolve_parser.add_argument(
+        "--json", action="store_true", help="Print the full JSON resolution"
+    )
+    resolve_parser.set_defaults(func=cmd_resolve)
 
     batch_parser = subparsers.add_parser(
         "batch", help="Scan many targets listed in a file"
