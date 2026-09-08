@@ -43,6 +43,7 @@ slopsquat-scan scan https://github.com/psf/requests    # a remote repo
 slopsquat-scan scan . --include-imports                # + names imported in source
 slopsquat-scan scan . --risk                           # + risk-score every dependency
 slopsquat-scan check loadsh --ecosystem javascript     # score one package name
+slopsquat-scan resolve cv2 sklearn                     # what do these actually install?
 slopsquat-scan batch repos_baseline.txt --out-dir scan_results/baseline
 ```
 
@@ -54,6 +55,8 @@ slopsquat-scan batch repos_baseline.txt --out-dir scan_results/baseline
   package name without needing a project to scan. See "Risk scoring" below.
 - `batch <targets-file> [--out-dir DIR]` — the same, for a list of targets,
   one JSON report each.
+- `resolve <import>...` — show which distribution a Python import name
+  actually comes from. See "Import → Distribution resolution" below.
 
 Scanning a **local** directory is the case that matters most in practice: the
 risk lands the moment you paste AI-generated code and install what it
@@ -254,6 +257,121 @@ only and deliberately so — Node doesn't resolve bare specifiers locally, a
 local file has to be required as `./foo`, so a same-named file there must
 *not* suppress a genuine package reference. Both directions are pinned by
 tests.
+
+### Import → Distribution resolution
+
+A Python module's importable name is not always the name you install:
+
+| You write | You install |
+|---|---|
+| `import cv2` | `opencv-python` |
+| `import sklearn` | `scikit-learn` |
+| `import yaml` | `PyYAML` |
+| `from PIL import Image` | `Pillow` |
+| `import bs4` | `beautifulsoup4` |
+| `import Crypto` | `pycryptodome` |
+
+So checking an import name against PyPI asks the wrong question. Before this
+layer existed, scanning a file importing six perfectly ordinary libraries
+produced two false accusations:
+
+```
+3 phantom dependencies:
+  yaml              (python)  app.py     <- actually PyYAML
+  cv2               (python)  app.py     <- actually opencv-python
+  auto_retry_httpx  (python)  app.py     <- genuinely invented
+```
+
+The three that *weren't* flagged — `sklearn`, `bs4`, `PIL` — passed for a
+worse reason than the failures: they only resolve because someone happens to
+have published shim distributions under those exact import names. The check
+was relying on a coincidence, not on being right.
+
+**How it resolves**, in order, stopping at the first layer that answers:
+
+1. **Curated mapping** (`known_aliases.py`) — confidence 1.0. One dedicated
+   module, so the mapping grows without touching scanner logic.
+2. **Installed environment** — `importlib.metadata.packages_distributions()`,
+   if the package happens to be installed where the scanner runs. Reads
+   dist-info metadata; it never imports the package.
+3. **Registry probe** — does a distribution of this exact name exist?
+   Strong evidence but not proof it provides the module, so confidence 0.9.
+4. **Give up honestly** — `unresolved`.
+
+```bash
+$ slopsquat-scan resolve cv2
+IMPORT:       cv2
+DISTRIBUTION: opencv-python
+RESOLUTION:   VERIFIED
+CONFIDENCE:   100%
+SOURCE:       mapping
+
+$ slopsquat-scan resolve sklearn yaml requests   # several at once
+```
+
+#### verified / unresolved / ambiguous
+
+**`verified`** — mapped to a distribution, which is then checked and scored
+by the existing risk engine exactly as before.
+
+**`unresolved`** — no layer could map it. This is reported as its own
+category, **not** as a phantom package:
+
+```
+1 unresolved import:
+  auto_retry_httpx  (python)  app.py
+                    no distribution of that name on the registry either
+
+Not classified as phantom: failing to map an import is not proof that no
+distribution provides it. Verify each before installing.
+```
+
+That wording is the point. "We could not determine what this installs" and
+"no such distribution exists" are different claims, and only the second
+would be evidence of a hallucinated package. An unresolved import still
+**exits 1** — an invented name lands here, so treating it as clean would gut
+the check — but it is never described as something the scanner did not
+prove.
+
+The report also distinguishes *absent* from *unasked*: if the registry
+couldn't be reached, the line reads `registry could not be consulted`
+instead. Without that, every offline run would look like a pile of
+discoveries.
+
+**`ambiguous`** — more than one distribution legitimately provides the
+module. Never collapsed to a guess:
+
+```
+$ slopsquat-scan resolve slugify
+DISTRIBUTION: AMBIGUOUS
+CANDIDATES:
+  - awesome-slugify
+  - python-slugify
+```
+
+#### What it deliberately does not do
+
+- **No fuzzy matching.** `reqests` never resolves to `requests`. Fuzzy
+  similarity is how the *typosquat* signal works in `risk.py`, answering the
+  opposite question — "is this suspiciously close to a popular name?" —
+  and letting it feed identity resolution would launder the exact attack
+  this project detects. Pinned by a test.
+- **No installing or importing** a target package to find out what it
+  provides.
+- **No touching manifests.** `requirements.txt` already lists distribution
+  names, so a line reading `cv2` means the distribution literally called
+  `cv2`. Rewriting it to `opencv-python` would answer about a package the
+  developer never asked for. Resolution applies to *source imports* only.
+- **No touching JavaScript.** npm has no module/distribution split — an
+  import specifier there is the package name — so JS behaviour is unchanged.
+
+#### Extending the mapping
+
+Add an entry to `KNOWN_PYTHON_ALIASES` in `known_aliases.py` (or
+`AMBIGUOUS_PYTHON_IMPORTS` if several distributions provide it). Nothing
+else needs to change. The mapping is deliberately incomplete and that is
+safe: a missing entry degrades to `unresolved`, which is a prompt to check,
+not an accusation.
 
 ### Two false-positive sources found and fixed while building this
 
@@ -536,7 +654,7 @@ pip install -e ".[dev]"
 pytest
 ```
 
-175 tests, no network required -- the registry HTTP layer and `git clone` are
+259 tests, no network required -- the registry HTTP layer and `git clone` are
 both stubbed, so the suite is deterministic and runs in well under a second.
 
 The point of the suite is not coverage for its own sake. Four separate
