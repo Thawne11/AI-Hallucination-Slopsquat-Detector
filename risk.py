@@ -45,6 +45,10 @@ TIER_THRESHOLDS = [
 # PHANTOM sits above CRITICAL deliberately: a name that resolves to nothing
 # is the one case where an install is guaranteed to either break or fetch
 # whatever an attacker registers under it later.
+# UNVERIFIED is deliberately absent. It is not a point on this scale at all
+# -- it means the registry could not be asked -- so meets_threshold rejects
+# it outright rather than ranking it. Ranking it as 0 would have made it
+# satisfy `--fail-on low`, since LOW is itself rank 0.
 TIER_ORDER = ["LOW", "MEDIUM", "HIGH", "CRITICAL", "PHANTOM"]
 
 GATEABLE_TIERS = ["low", "medium", "high", "critical"]
@@ -59,7 +63,13 @@ def tier_rank(tier: str) -> int:
 
 
 def meets_threshold(tier: str, threshold: str) -> bool:
-    """Whether `tier` is at least as severe as `threshold`."""
+    """Whether `tier` is at least as severe as `threshold`.
+
+    A tier outside the severity scale (UNVERIFIED) is never severe enough
+    for any gate: it carries no claim about the package to be severe about.
+    """
+    if tier.upper() not in TIER_ORDER:
+        return False
     return tier_rank(tier) >= tier_rank(threshold)
 
 
@@ -234,12 +244,144 @@ def tier_for(score: int) -> str:
     return "LOW"
 
 
-def score_package(metadata: dict) -> dict:
-    """Score one package from its registry metadata (see registry.fetch_metadata)."""
+# ---------------------------------------------------------------------------
+# Confidence
+#
+# Risk and confidence answer different questions. Risk asks how suspicious a
+# package looks; confidence asks how much evidence that judgement rests on. A
+# package can be risk 90 / confidence 40 (alarming pattern, thin evidence) or
+# risk 10 / confidence 100 (ordinary package, everything known).
+#
+# This is deliberately *evidence completeness*, not "probability the verdict
+# is correct". There is no calibration data behind this tool, so a number
+# implying otherwise would be an unearned claim. The weights below say how
+# much each piece of evidence contributes, they sum to 100, and the whole
+# calculation is a sum -- no tuning, no model.
+# ---------------------------------------------------------------------------
+
+EVIDENCE_WEIGHTS = {
+    # Dominant by design: without a registry answer, nothing else is known.
+    "registry_lookup": 40,
+    "release_history": 15,
+    "download_stats": 15,
+    "maintainer_info": 15,
+    "repository_info": 10,
+    "description": 5,
+}
+
+# A definitive "no such package" is nearly all the evidence there is to have,
+# even though a nonexistent package publishes no metadata to corroborate it.
+# Not 100: registries are briefly inconsistent, and an unclaimed name can be
+# registered a minute after the check.
+PHANTOM_CONFIDENCE = 95
+
+# Identity uncertainty is not evidence about the package -- it is doubt about
+# *which* package is being judged, which undercuts the whole assessment.
+RESOLUTION_PENALTIES = {
+    "unresolved": 25,
+    "ambiguous": 25,
+}
+# A registry-identity match means a distribution of that name exists, not
+# that it is what provides the module.
+REGISTRY_IDENTITY_PENALTY = 5
+
+
+def _evidence_item(name: str, available: bool, detail: str) -> dict:
+    return {
+        "name": name,
+        "available": available,
+        "weight": EVIDENCE_WEIGHTS[name],
+        "detail": detail,
+    }
+
+
+def score_confidence(metadata: dict, resolution: dict | None = None) -> dict:
+    """How much evidence backs the risk verdict, 0-100, with the reasons."""
+    lookup_ok = metadata.get("lookup_ok", metadata.get("exists") is not None)
+
+    if not lookup_ok:
+        evidence = [_evidence_item(
+            "registry_lookup", False, "registry could not be reached"
+        )]
+        return _confidence_result(0, evidence, resolution)
+
+    evidence = [_evidence_item("registry_lookup", True, "registry answered")]
+
+    if metadata.get("exists") is False:
+        return _confidence_result(PHANTOM_CONFIDENCE, evidence, resolution)
+
+    for name, value, present, absent in [
+        ("release_history", metadata.get("release_count"),
+         "release history available", "no release history"),
+        ("download_stats", metadata.get("weekly_downloads"),
+         "download statistics available",
+         "download statistics unavailable for this registry"),
+        ("maintainer_info", metadata.get("maintainer_count"),
+         "maintainer information available",
+         "maintainer information unavailable for this registry"),
+        ("repository_info", metadata.get("repository_url"),
+         "repository link present", "no repository link"),
+        ("description", metadata.get("description"),
+         "description present", "no description"),
+    ]:
+        evidence.append(_evidence_item(
+            name, value is not None, present if value is not None else absent
+        ))
+
+    total = sum(item["weight"] for item in evidence if item["available"])
+    return _confidence_result(total, evidence, resolution)
+
+
+def _confidence_result(base: int, evidence: list[dict],
+                       resolution: dict | None) -> dict:
+    penalty = 0
+    note = None
+
+    if resolution:
+        status = resolution.get("resolution_status")
+        if status in RESOLUTION_PENALTIES:
+            penalty = RESOLUTION_PENALTIES[status]
+            note = f"import identity {status}"
+        elif resolution.get("resolution_source") == "registry":
+            penalty = REGISTRY_IDENTITY_PENALTY
+            note = "import identity inferred from the registry, not a known mapping"
+
+    confidence = max(0, min(100, base - penalty))
+    return {
+        "confidence": confidence,
+        "evidence": evidence,
+        "confidence_penalty": penalty,
+        "confidence_note": note,
+    }
+
+
+def score_package(metadata: dict, resolution: dict | None = None) -> dict:
+    """Score one package from its registry metadata (see registry.fetch_metadata).
+
+    `resolution` is the import-reconciliation result, when the package was
+    reached via a source import. It never changes the risk score -- only how
+    confident we are that the right package is being scored.
+    """
     name = metadata["name"]
     ecosystem = metadata["ecosystem"]
 
     typosquat, _ = _typosquat_signal(name, ecosystem)
+    confidence = score_confidence(metadata, resolution)
+
+    if metadata.get("exists") is None:
+        # The registry could not be consulted. This is not a finding about
+        # the package -- reporting it as one would turn an outage into a
+        # scan full of accusations.
+        return {
+            "name": name,
+            "ecosystem": ecosystem,
+            "exists": None,
+            "score": 0,
+            "tier": "UNVERIFIED",
+            "signals": [],
+            "unavailable_signals": ["registry_lookup"],
+            **confidence,
+        }
 
     if not metadata.get("exists"):
         # Not a live threat today -- the install simply fails. But the name is
@@ -257,6 +399,7 @@ def score_package(metadata: dict) -> dict:
             "tier": "PHANTOM",
             "signals": signals,
             "unavailable_signals": [],
+            **confidence,
         }
 
     signals = []
@@ -282,4 +425,5 @@ def score_package(metadata: dict) -> dict:
         "tier": tier_for(score),
         "signals": signals,
         "unavailable_signals": unavailable,
+        **confidence,
     }

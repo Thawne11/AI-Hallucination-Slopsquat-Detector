@@ -6,6 +6,7 @@ no network dependency and no registry rate-limit flakiness.
 """
 
 import pytest
+import requests
 
 import registry
 from known_aliases import KNOWN_PYTHON_ALIASES
@@ -224,3 +225,70 @@ class TestMetadata:
     def test_unsupported_language_raises(self):
         with pytest.raises(ValueError):
             registry.fetch_metadata("some-gem", "ruby")
+
+
+class ExplodingSession:
+    """Every request fails, as during a DNS outage or a dropped connection."""
+
+    def __init__(self):
+        self.attempts = 0
+
+    def get(self, url, timeout=None):
+        self.attempts += 1
+        raise requests.ConnectionError("network is down")
+
+
+class TestRegistryUnreachable:
+    """REGRESSION: every registry call used to raise on a network error. An
+    unhandled exception exits 1 -- the same code as a real finding -- so a
+    bad network day was indistinguishable from bad dependencies."""
+
+    def test_pypi_existence_is_unknown_not_false(self, monkeypatch):
+        monkeypatch.setattr(registry, "_SESSION", ExplodingSession())
+
+        assert registry.exists("requests", "python") is None
+
+    def test_npm_existence_is_unknown_not_false(self, monkeypatch):
+        monkeypatch.setattr(registry, "_SESSION", ExplodingSession())
+
+        assert registry.exists("express", "javascript") is None
+
+    def test_distribution_probe_is_unknown_not_false(self, monkeypatch):
+        monkeypatch.setattr(registry, "_SESSION", ExplodingSession())
+
+        assert registry.distribution_exists("requests") is None
+
+    def test_pypi_metadata_reports_a_failed_lookup(self, monkeypatch):
+        monkeypatch.setattr(registry, "_SESSION", ExplodingSession())
+
+        result = registry.fetch_metadata("requests", "python")
+
+        assert result["exists"] is None
+        assert result["lookup_ok"] is False
+
+    def test_npm_metadata_reports_a_failed_lookup(self, monkeypatch):
+        monkeypatch.setattr(registry, "_SESSION", ExplodingSession())
+
+        result = registry.fetch_metadata("express", "javascript")
+
+        assert result["exists"] is None
+        assert result["lookup_ok"] is False
+
+    def test_nothing_raises(self, monkeypatch):
+        """The scan must survive an outage rather than dying mid-run."""
+        monkeypatch.setattr(registry, "_SESSION", ExplodingSession())
+
+        registry.exists("a", "python")
+        registry.exists("b", "javascript")
+        registry.fetch_metadata("c", "python")
+        registry.fetch_metadata("d", "javascript")
+
+    def test_a_successful_lookup_still_reports_ok(self, monkeypatch):
+        monkeypatch.setattr(registry, "_SESSION", MetadataSession({
+            PYPI_PREFIX: {"info": {}, "releases": {}}
+        }))
+
+        result = registry.fetch_metadata("requests", "python")
+
+        assert result["lookup_ok"] is True
+        assert result["exists"] is True

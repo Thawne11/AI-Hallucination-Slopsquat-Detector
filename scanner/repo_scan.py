@@ -127,12 +127,15 @@ def _new_report(target: str) -> dict:
         # apart from phantom_packages on purpose: "we could not map
         # this" is a weaker claim than "this does not exist".
         "unresolved_imports": [],
+        # Packages whose existence could not be checked because the registry
+        # was unreachable. Never phantom: an outage is not evidence.
+        "unverified_packages": [],
         "risk": [],
         "error": None,
     }
 
 
-def _assess(name: str, ecosystem: str, with_risk: bool):
+def _assess(name: str, ecosystem: str, with_risk: bool, resolution=None):
     """Return (exists, risk_or_None) for one package.
 
     In risk mode the metadata fetch already reveals whether the package
@@ -143,7 +146,7 @@ def _assess(name: str, ecosystem: str, with_risk: bool):
         return registry_exists(name, ecosystem), None
 
     metadata = fetch_metadata(name, ecosystem)
-    return metadata["exists"], score_package(metadata)
+    return metadata["exists"], score_package(metadata, resolution)
 
 
 def _read(path: str) -> str | None:
@@ -260,7 +263,7 @@ def _scan_directory_into(
         seen.add(key)
 
         if key not in package_cache:
-            package_exists, risk = _assess(name, ecosystem, with_risk)
+            package_exists, risk = _assess(name, ecosystem, with_risk, resolution)
             package_cache[key] = package_exists
             if risk:
                 risk_cache[key] = {
@@ -268,6 +271,17 @@ def _scan_directory_into(
                     **({"resolution": resolution} if resolution else {}),
                 }
             time.sleep(_REGISTRY_SLEEP)
+
+        if package_cache[key] is None:
+            if (name, ecosystem, "unverified") not in reported:
+                reported.add((name, ecosystem, "unverified"))
+                report["unverified_packages"].append({
+                    "name": name,
+                    "ecosystem": ecosystem,
+                    "found_in": rel_path,
+                    "origin": origin,
+                })
+            continue
 
         # A name imported from several files is one finding, not several.
         if not package_cache[key] and (name, ecosystem, origin) not in reported:
