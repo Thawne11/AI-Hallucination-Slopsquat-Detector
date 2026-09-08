@@ -125,6 +125,32 @@ def format_unresolved_section(report: dict) -> str:
     return "\n".join(lines)
 
 
+def format_unverified_section(report: dict) -> str:
+    """Packages the registry could not be asked about.
+
+    Reported separately from every kind of finding: an outage says nothing
+    about a package, and presenting it as a result would let a bad network
+    day masquerade as a security discovery.
+    """
+    unverified = report.get("unverified_packages", [])
+    if not unverified:
+        return ""
+
+    noun = "package" if len(unverified) == 1 else "packages"
+    lines = ["", f"{len(unverified)} unverified {noun} (registry unreachable):"]
+    width = max(len(u["name"]) for u in unverified)
+    for item in unverified:
+        lines.append(
+            f"  {item['name']:<{width}}  ({item['ecosystem']})  {item['found_in']}"
+        )
+    lines.append("")
+    lines.append(
+        "Existence could not be checked -- this is not a finding about these "
+        "packages, and the scan is incomplete."
+    )
+    return "\n".join(lines)
+
+
 def format_resolution(resolution: dict) -> str:
     """The `resolve` command's view of one import name."""
     status = resolution["resolution_status"].upper()
@@ -155,27 +181,53 @@ def format_resolution(resolution: dict) -> str:
     return "\n".join(lines)
 
 
-def format_risk_entry(entry: dict, indent: str = "  ") -> str:
+def format_risk_entry(entry: dict, indent: str = "  ", explain: bool = False) -> str:
     """One package's risk verdict, with the reason for every point awarded.
 
     The reasons are the point of the output. A bare number cannot be argued
     with or acted on; "3 days old, one release, no repository link" can.
     """
-    lines = [
+    header = (
         f"{indent}{entry['name']}  [{entry['tier']} {entry['score']}/100]"
         f"  ({entry['ecosystem']})"
-    ]
+    )
+    if entry.get("confidence") is not None:
+        header += f"  confidence {entry['confidence']}%"
+    lines = [header]
+
     for signal in entry["signals"]:
-        lines.append(f"{indent}  - {signal['reason']}  (+{signal['points']})")
+        lines.append(f"{indent}  +{signal['points']:<3} {signal['reason']}")
+    if entry["signals"]:
+        raw = sum(signal["points"] for signal in entry["signals"])
+        lines.append(f"{indent}  {'':<4}{'-' * 20}")
+        # The score is capped at 100, so say so rather than printing a total
+        # that silently disagrees with the factors above it.
+        capped = "" if raw == entry["score"] else f"  (capped from {raw})"
+        lines.append(f"{indent}  {entry['score']:<4}total{capped}")
+
     if entry.get("unavailable_signals"):
         lines.append(
             f"{indent}  - not scored, unavailable for this registry: "
             + ", ".join(entry["unavailable_signals"])
         )
+
+    if explain and entry.get("evidence"):
+        lines.append("")
+        lines.append(f"{indent}Evidence quality ({entry['confidence']}%):")
+        for item in entry["evidence"]:
+            mark = "+" if item["available"] else "!"
+            lines.append(
+                f"{indent}  {mark} {item['detail']}  ({item['weight']} pts)"
+            )
+        if entry.get("confidence_note"):
+            lines.append(
+                f"{indent}  ! {entry['confidence_note']}  "
+                f"(-{entry['confidence_penalty']} pts)"
+            )
     return "\n".join(lines)
 
 
-def format_risk_section(report: dict) -> str:
+def format_risk_section(report: dict, explain: bool = False) -> str:
     notable = [
         entry for entry in report.get("risk", [])
         if entry["score"] >= RISK_REPORTING_THRESHOLD
@@ -184,7 +236,7 @@ def format_risk_section(report: dict) -> str:
         return "\nRisk: nothing above the reporting threshold."
 
     lines = ["", f"Risk ({len(notable)} package(s) worth a look):"]
-    lines.extend(format_risk_entry(entry) for entry in notable)
+    lines.extend(format_risk_entry(entry, explain=explain) for entry in notable)
     lines.append("")
     lines.append(
         "Scores are heuristic triage, not proof of anything -- they rank what "
@@ -207,6 +259,11 @@ def risk_failures(report: dict, fail_on: str | None) -> list[dict]:
 def exit_code_for(report: dict, fail_on: str | None = None) -> int:
     if report["error"]:
         return EXIT_SCAN_ERROR
+    # A scan that could not reach the registry did not complete. Reporting
+    # that as a finding would make an outage look like bad dependencies;
+    # reporting it as clean would be worse.
+    if report.get("unverified_packages"):
+        return EXIT_SCAN_ERROR
     if report["phantom_packages"]:
         return EXIT_FINDING
     # An unresolved import is a weaker claim than a phantom package, but it
@@ -225,7 +282,7 @@ def cmd_check(args):
     if args.json:
         print(json.dumps(entry, indent=2))
     else:
-        print(format_risk_entry(entry, indent=""))
+        print(format_risk_entry(entry, indent="", explain=args.explain))
 
     if args.fail_on:
         return EXIT_FINDING if meets_threshold(entry["tier"], args.fail_on) else EXIT_CLEAN
@@ -268,8 +325,11 @@ def cmd_scan(args):
         unresolved = format_unresolved_section(report)
         if unresolved:
             print(unresolved)
+        unverified = format_unverified_section(report)
+        if unverified:
+            print(unverified)
         if with_risk:
-            print(format_risk_section(report))
+            print(format_risk_section(report, explain=args.explain))
             failures = risk_failures(report, args.fail_on)
             if failures:
                 worst = failures[0]
@@ -360,6 +420,11 @@ def main():
             f"tier ({', '.join(GATEABLE_TIERS)}). Implies --risk."
         ),
     )
+    scan_parser.add_argument(
+        "--explain", action="store_true",
+        help="Show the full score breakdown and the evidence behind the "
+             "confidence figure",
+    )
     scan_parser.add_argument("--out", help="Also write the JSON report to this path")
     scan_parser.set_defaults(func=cmd_scan)
 
@@ -373,6 +438,11 @@ def main():
     )
     check_parser.add_argument(
         "--json", action="store_true", help="Print the full JSON verdict"
+    )
+    check_parser.add_argument(
+        "--explain", action="store_true",
+        help="Show the full score breakdown and the evidence behind the "
+             "confidence figure",
     )
     check_parser.add_argument(
         "--fail-on", choices=GATEABLE_TIERS, metavar="TIER",
