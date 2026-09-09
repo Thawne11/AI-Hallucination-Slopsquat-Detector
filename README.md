@@ -741,7 +741,7 @@ pip install -e ".[dev]"
 pytest
 ```
 
-311 tests, no network required -- the registry HTTP layer and `git clone` are
+332 tests, no network required -- the registry HTTP layer and `git clone` are
 both stubbed, so the suite is deterministic and runs in well under a second.
 
 The point of the suite is not coverage for its own sake. Four separate
@@ -864,6 +864,72 @@ typosquat must land above LOW. That also means the confidence score remains
 uncalibrated by design -- this corpus is far too small to calibrate against,
 and pretending otherwise would be the sort of unearned claim the rest of the
 tool avoids.
+
+## Does hallucination precede registration?
+
+Published work measures how often models invent package names. What it does
+not show is the **causal arrow** -- that a name was invented by a model
+*first* and claimed by a human *afterwards*. That ordering is the whole
+difference between slopsquatting and ordinary typosquatting, and it is
+usually assumed rather than measured.
+
+It is measurable with data this project already fetches. `first_release` is
+used today only for the age signal in risk scoring:
+
+```
+registered after the model's release date
+  -> the model cannot have learned it from the registry
+  -> it invented the name, and somebody claimed it later
+```
+
+```bash
+python3 registration_timing.py
+```
+
+Three candidate sets, because one alone proves nothing -- the names our
+models actually produced, separator and digit-word rewrites of those (which
+squatters register alongside the original), and a control set of
+plausible-shaped names built from the same vocabulary that no model
+produced.
+
+| Set | Registered | Checked | Rate |
+|---|---|---|---|
+| hallucinated | 0 | 10 | 0.0% |
+| variants | 2 | 48 | 4.2% |
+| control | 11 | 120 | 9.2% |
+
+### The result is not evidence, and that is the finding
+
+Zero registrations among the hallucinated names looks like a clean negative.
+It is not a result at all. At the control base rate of 9.2%, **the chance of
+seeing zero hits in 10 draws is 38%** -- exactly what you would expect if
+hallucinated names were registered no differently from any other plausible
+name.
+
+Working the arithmetic the other way is what makes this worth having:
+detecting even a *doubling* of the base rate would take roughly **226
+distinct hallucinated names**. This corpus has 10. The experiment is
+underpowered by more than an order of magnitude, and now that is a number
+rather than a feeling -- which turns "we should generate a bigger corpus"
+from an instinct into a requirement with a target attached.
+
+### What the control set did establish
+
+**About 1 in 11 plausible-sounding package names is already registered.**
+That baseline did not exist before, and it is useful independently: any
+claim that hallucinated names get squatted has to beat it, and the namespace
+is far more crowded than intuition suggests.
+
+Every registered candidate found predates both model releases, so none show
+the hallucination-then-registration ordering. They are ordinary packages
+whose names a model drifted towards -- itself worth noting, since it means
+hallucinations often land near real but obscure names rather than in empty
+space.
+
+Full numbers and caveats in [`REGISTRATION_TIMING.md`](REGISTRATION_TIMING.md),
+including the most important one: the control set is probably biased
+*towards* existing names, since recombining common tokens produces obvious
+names like `proxy-server` that were claimed years ago.
 
 ## Limitations (be upfront about these)
 

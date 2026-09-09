@@ -1,0 +1,1458 @@
+{
+  "control": [
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "http-socket",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "client-async",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": true,
+      "first_release": "2023-06-17T13:40:00.073486Z",
+      "lookup_ok": true,
+      "name": "json2schema",
+      "risk_score": 38,
+      "risk_tier": "MEDIUM",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "sessionlimit",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "socket2jwt",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "csv2async",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "cachejson",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "client2mailer",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "csvlogger",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "retry-socket",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "parser2jwt",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "session-upload",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "retrytoken",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "router-worker",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "sessionretry",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "mailer-server",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "proxy-token-stream",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "clientretry",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "pdf-jwt-mailer",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "worker2pdf",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "socketyaml",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "schema2jwt",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "json-yaml-stream",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": true,
+      "first_release": "2013-07-12T14:22:28.737Z",
+      "lookup_ok": true,
+      "name": "json-csv",
+      "risk_score": 10,
+      "risk_tier": "LOW",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "limit-client-socket",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "upload2worker",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "limit-yaml",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "retryparser",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "yamlhttps",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": true,
+      "first_release": "2016-01-15T22:03:00.318Z",
+      "lookup_ok": true,
+      "name": "json-yaml",
+      "risk_score": 45,
+      "risk_tier": "MEDIUM",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "socket2rate",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "loggerws",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "session2csv",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "session-schema-rate",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": true,
+      "first_release": "2021-08-31T17:44:51.877173Z",
+      "lookup_ok": true,
+      "name": "parserconfig",
+      "risk_score": 15,
+      "risk_tier": "LOW",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "session2rate",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "routeryaml",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "logger-ws",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "retryhttps",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "yaml2session",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "queuelogger",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "jwt-limit",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "csv2parser",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "upload-limit-socket",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "retry-http-csv",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "clientjson",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "config-retry-parser",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "parser-limit-queue",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "client-http",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "limit2router",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "pdf2async",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": true,
+      "first_release": "2015-05-01T00:17:56.089Z",
+      "lookup_ok": true,
+      "name": "async-http",
+      "risk_score": 38,
+      "risk_tier": "MEDIUM",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "upload2schema",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "yaml-csv",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "csv2limit",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "schemasocket",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "server2async",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": true,
+      "first_release": "2017-05-09T19:56:16.478Z",
+      "lookup_ok": true,
+      "name": "yaml-cache",
+      "risk_score": 45,
+      "risk_tier": "MEDIUM",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "router-batch-worker",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": true,
+      "first_release": "2013-08-08T19:55:33.618Z",
+      "lookup_ok": true,
+      "name": "client-router",
+      "risk_score": 45,
+      "risk_tier": "MEDIUM",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "ws2token",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "pdf-csv",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "batch2server",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "upload-pdf-batch",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "token2mailer",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "pdf-jwt",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "jwt-json-mailer",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "jwt-https-session",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "config2https",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "jwtyaml",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "ws2logger",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": true,
+      "first_release": "2022-06-21T02:51:48.924Z",
+      "lookup_ok": true,
+      "name": "limit-logger",
+      "risk_score": 28,
+      "risk_tier": "MEDIUM",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "uploadmailer",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "socket-batch-limit",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "cache2retry",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "worker2mailer",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "mailer-logger-server",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": true,
+      "first_release": "2017-06-16T12:49:27.880Z",
+      "lookup_ok": true,
+      "name": "batchupload",
+      "risk_score": 30,
+      "risk_tier": "MEDIUM",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "mailerstream",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "https-pdf-retry",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "schemamailer",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "rate-json",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "cache-json",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "limit2worker",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "retry2parser",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "socketrate",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "parser-client",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "yaml-socket",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "streamasync",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "socket-https-http",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": true,
+      "first_release": "2026-06-29T13:13:20.725955Z",
+      "lookup_ok": true,
+      "name": "token-limit",
+      "risk_score": 20,
+      "risk_tier": "MEDIUM",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "json2token",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "rate-socket",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "session2schema",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "pdf-limit-mailer",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "schema-logger",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "async-schema-csv",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": true,
+      "first_release": "2014-09-26T03:48:12.430Z",
+      "lookup_ok": true,
+      "name": "proxy-server",
+      "risk_score": 38,
+      "risk_tier": "MEDIUM",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "parser2token",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "parser-session-config",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "server-batch",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "csv-cache",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "limit2stream",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "session-csv-token",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "https-cache",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "schema2rate",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "retry2stream",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "retry-batch-ws",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "http-csv-rate",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "upload2yaml",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "socket2logger",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "json2upload",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "jwtlimit",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "rate2yaml",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "yaml-upload-session",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "config2queue",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "router-limit-csv",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "socket2stream",
+      "set": "control"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "retry-token-parser",
+      "set": "control"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "configstream",
+      "set": "control"
+    }
+  ],
+  "hallucinated": [
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "rate-limit-memory",
+      "set": "hallucinated"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "rate-limiter-middleware",
+      "set": "hallucinated"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "ip2proxy",
+      "set": "hallucinated"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "ipaddr5",
+      "set": "hallucinated"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "samllib",
+      "set": "hallucinated"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "@grpc/client",
+      "set": "hallucinated"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "json2htmlparser",
+      "set": "hallucinated"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "js2pdf",
+      "set": "hallucinated"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "@aws-sdk/client-graph-cql",
+      "set": "hallucinated"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "@aws-sdk/client-graphql",
+      "set": "hallucinated"
+    }
+  ],
+  "variants": [
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "@aws.sdk/client.graph.cql",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "@aws.sdk/client.graphql",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "@aws_sdk/client_graph_cql",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "@aws_sdk/client_graphql",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "@awssdk/clientgraphcql",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "@awssdk/clientgraphql",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "iptoproxy",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "iptwoproxy",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "jsontohtmlparser",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "jsontwohtmlparser",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": true,
+      "first_release": "2019-03-08T05:14:34.619Z",
+      "lookup_ok": true,
+      "name": "jstopdf",
+      "risk_score": 48,
+      "risk_tier": "MEDIUM",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "jstwopdf",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "node-aws-sdk-client-graph-cql",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "node-aws-sdk-client-graphql",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": true,
+      "first_release": "2018-09-06T03:33:25.315Z",
+      "lookup_ok": true,
+      "name": "node-grpc-client",
+      "risk_score": 20,
+      "risk_tier": "MEDIUM",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "node-ip2proxy",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "node-ipaddr5",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "node-js2pdf",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "node-json2htmlparser",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "node-rate-limit-memory",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "node-rate-limiter-middleware",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "node-samllib",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "py-aws-sdk-client-graph-cql",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "py-aws-sdk-client-graphql",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "py-grpc-client",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "py-ip2proxy",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "py-ipaddr5",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "py-js2pdf",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "py-json2htmlparser",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "py-rate-limit-memory",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "py-rate-limiter-middleware",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "py-samllib",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "python-aws-sdk-client-graph-cql",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "python-aws-sdk-client-graphql",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "python-grpc-client",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "python-ip2proxy",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "python-ipaddr5",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "python-js2pdf",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "python-json2htmlparser",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "python-rate-limit-memory",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "python-rate-limiter-middleware",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "python",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "python-samllib",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "rate.limit.memory",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "rate.limiter.middleware",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "rate_limit_memory",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "rate_limiter_middleware",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "ratelimitermiddleware",
+      "set": "variants"
+    },
+    {
+      "ecosystem": "javascript",
+      "exists": false,
+      "first_release": null,
+      "lookup_ok": true,
+      "name": "ratelimitmemory",
+      "set": "variants"
+    }
+  ]
+}
