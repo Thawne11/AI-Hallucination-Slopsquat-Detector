@@ -7,3 +7,5 @@ report.json
 LINKEDIN_POST.md
 *.egg-info/
 build/
+corpus_batch_state.json
+frontier_corpus_raw.json
