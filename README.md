@@ -741,7 +741,7 @@ pip install -e ".[dev]"
 pytest
 ```
 
-332 tests, no network required -- the registry HTTP layer and `git clone` are
+353 tests, no network required -- the registry HTTP layer and `git clone` are
 both stubbed, so the suite is deterministic and runs in well under a second.
 
 The point of the suite is not coverage for its own sake. Four separate
@@ -930,6 +930,55 @@ Full numbers and caveats in [`REGISTRATION_TIMING.md`](REGISTRATION_TIMING.md),
 including the most important one: the control set is probably biased
 *towards* existing names, since recombining common tokens produces obvious
 names like `proxy-server` that were claimed years ago.
+
+## Frontier-model corpus (built, not yet run)
+
+The biggest limitation in everything above: the hallucination corpus comes
+from two small local models, `qwen2.5-coder:7b` and `llama3.2:3b`, that
+almost nobody ships production code with. The names that actually get
+squatted come from the models developers really use. Every downstream
+number inherits that -- the 7x model gap, the 10-name corpus, and the
+registration-timing experiment that is underpowered by 20x.
+
+`corpus_batch.py` closes it, through the Batch API at half price. It is
+built and tested; running it costs money, so that step is deliberately
+separate.
+
+```bash
+python3 corpus_batch.py estimate                 # free, offline, no API key
+python3 corpus_batch.py submit --limit 10        # ~$0.05 smoke test
+python3 corpus_batch.py status
+python3 corpus_batch.py collect                  # free
+```
+
+**Nothing spends money by accident.** `estimate` needs no key and makes no
+network call; a test asserts it never constructs a client. `submit` is the
+only command that spends, and it prints the estimate and requires typing
+`yes` first. A `--limit 10` run costs about five cents and proves the whole
+pipeline end to end before committing to the real thing.
+
+Cost at Sonnet 5 with the batch discount, assuming ~1,000 output tokens per
+generation:
+
+| Scale | Requests | Estimated |
+|---|---|---|
+| `--samples 10` (default) | 220 | ~$1.11 |
+| `--samples 45` | 990 | ~$4.99 |
+| `--samples 136` | 2,992 | ~$15.08 |
+
+Output tokens dominate and can only be guessed beforehand, so the estimate
+states its assumption and scales linearly if generations run longer -- which
+a small `--limit` run reveals immediately.
+
+Sonnet 5 rather than the cheaper Haiku on purpose: the entire point is
+*representativeness*, and saving a few dollars by generating from a model
+people do not code with would defeat the exercise.
+
+Output is written in the same shape the local runs produced, so
+`reanalyze_corrected.py` and `registration_timing.py` consume it unchanged.
+Reaching the ~226 distinct names the timing experiment needs is roughly the
+`--samples 136` row, extrapolating the 2.3% distinct-name yield measured
+locally.
 
 ## Limitations (be upfront about these)
 
