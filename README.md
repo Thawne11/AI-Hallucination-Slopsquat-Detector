@@ -990,3 +990,7 @@ names like `proxy-server` that were claimed years ago.
 This project is a small, reproducible way to run the same kind of check
 yourself, against whichever model, prompts, or real-world repos you care
 about.
+
+## License
+
+MIT -- see [LICENSE](LICENSE).
